@@ -1,8 +1,8 @@
 # Pixel Prompt Frontend
 
-This repository houses the frontend component of the Pixel Prompt application, a versatile platform designed to streamline the deployment of large-scale machine learning (ML) applications. Built using React Native, this frontend seamlessly integrates with a symmetrical backend component powered by FastAPI and Docker.
+Pixel Prompt is a versatile platform that streamlines the deployment of large-scale machine learning (ML) applications. This repository houses the frontend component, built using React Native, which integates with a symmetrical backend powered by FastAPI and Docker.
 
-While currently deployed with diffusion models, Pixel Prompt is engineered to serve a wide range of ML workloads, offering flexibility and scalability. The frontend leverages React to construct robust and responsive static components, enabling efficient deployment within a containerized environment alongside the backend or as a separate entity for optimized resource utilization.
+Although currently deployed with diffusion models, Pixel Prompt is designed to handle a wide range of ML workloads, offering flexibility and scalability. The frontend utilizes React to create robust and responsive static components, enabling efficient deployment within a containerized environment alongside the backend or as a separate entity for optimized resource utilization.
 
 ## Components and Deployment Architectures
 
@@ -27,7 +27,6 @@ To preview the application visit the hosted version on the Hugging Face Spaces p
 <table>
   <tr>
     <td><img src="https://github.com/HatmanStack/pixel-prompt-frontend/blob/main/pics/pixel-prompt-frontend.png" alt="Image 1"></td>
-    <td><img src="https://github.com/HatmanStack/pixel-prompt-frontend/blob/main/pics/pixel-prompt_frontend-1.png" alt="Image 2"></td>
     </tr>
     <tr>
     <td><img src="https://github.com/HatmanStack/pixel-prompt-frontend/blob/main/pics/pixel-prompt-frontend-2.png" alt="Image 3"></td>
@@ -42,10 +41,6 @@ Before running this application locally, ensure that you have the following depe
 
 - Node
 - npm (Node Package Manager)
-
-### Backend
-
-- Pytorch for cpu is installed by default for a cuda install refer to the pytorch [download helper](https://pytorch.org/get-started/locally/)
 
 ## Installation
 
