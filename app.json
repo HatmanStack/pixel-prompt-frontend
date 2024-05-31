@@ -1,0 +1,17 @@
+{
+    "expo": {
+      "name": "Pixel Prompt Frontend",
+      "slug": "pixel-prompt-frontend",
+      "version": "1.0.0",
+      "platforms": ["web", "android", "ios"],
+      "assetModuleNamespace": "assets",
+      "fonts": [
+        {
+          "Roboto": {
+            "src": ["assets/Sigmar/Sigmar-Regular.ttf"]
+          }
+        }
+      ]
+    }
+  }
+  
