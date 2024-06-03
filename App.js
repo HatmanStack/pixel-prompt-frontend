@@ -127,7 +127,6 @@ const colors = {
 const styles = StyleSheet.create({
   titlecontainer: {
     backgroundColor: colors.backgroundColor,
-    
     position: 'absolute', 
     top: 0,
     left: 0,
