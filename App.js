@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, View, ScrollView, Text, Pressable, Dimensions, Image } from 'react-native';
+import { ActivityIndicator, StyleSheet, View, ScrollView, Text, Pressable, Dimensions, Image, useWindowDimensions } from 'react-native';
 import { registerRootComponent } from 'expo';
 import { StatusBar } from 'expo-status-bar';
 import {useFonts } from 'expo-font'; 
-import axios from 'axios';
 
 import SliderComponent from './components/Slider';
 import PromptInputComponent from './components/PromptInput';
@@ -23,8 +22,8 @@ export default function App() {
   const [activity, setActivity] = useState(false);
   const [modelError, setModelError] = useState(false);
   const [returnedPrompt, setReturnedPrompt] = useState('Avocado Armchair');
-  const windowWidth = Dimensions.get('window').width;
-
+  const {width} = useWindowDimensions();
+  
   const passPromptWrapper = (x) => {setPrompt(x)};
   const passStepsWrapper = (x) => {setSteps(x)};
   const passGuidanceWrapper = (x) => {setGuidance(x)};
@@ -34,20 +33,27 @@ export default function App() {
   
     useEffect(() => {
       if (parameters != ''){
+        console.log(parameters)
         setActivity(true);
-        axios.post("http://0.0.0.0:8085/api", { // Change this to point to your Local endpoint or Backend
-        prompt: prompt,
-        steps: steps,
-        guidance: guidance,
-        modelID: modelID
+        fetch('/api', {             // Change this to your API endpoint if running seperate // 'http://localhost:8085/api'
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: prompt,
+          steps: steps,
+          guidance: guidance,
+          modelID: modelID
+        })
       })
-      .then(response => {
-        console.log(response);
-        setActivity(false);
-        setReturnedPrompt(prompt);
-        setInferredImage('data:image/png;base64,' + response.data.output);
-      })
-      .catch(function (error) {
+      .then(response => response.json())
+      .then( responseData => {
+          setActivity(false);
+          setReturnedPrompt(prompt);
+          setInferredImage('data:image/png;base64,' + responseData.output);
+        })
+        .catch(function (error) {
         setActivity(false);
         setModelError(true);
         console.log(error);
@@ -60,7 +66,7 @@ export default function App() {
       <View style={styles.titlecontainer}>
         <BreathingComponent /> 
         <ScrollView scrollY={true} style={styles.ScrollView} showsVerticalScrollIndicator={false}> 
-          {windowWidth > 1000 ? (<View style={styles.rowContainer}>
+          {width > 1000 ? (<View style={styles.rowContainer}>
               {/* Left column */}
               <View style={styles.columnContainer}>
                   <View>
