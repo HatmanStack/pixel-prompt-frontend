@@ -8,6 +8,7 @@ import {
   Pressable,
   useWindowDimensions,
   Image,
+  Switch,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
@@ -33,12 +34,15 @@ export default function App() {
   );
   const [prompt, setPrompt] = useState("Avocado Armchair");
   const [inferredPrompt, setInferredPrompt] = useState(null);
-  const [parameters, setParameters] = useState("");
+  const [parameters, setParameters] = useState(null);
   const [activity, setActivity] = useState(false);
   const [modelError, setModelError] = useState(false);
   const [returnedPrompt, setReturnedPrompt] = useState("Avocado Armchair");
   const [textInference, setTextInference] = useState(false);
   const [encodedImage, setEncodedImage] = useState('')
+  const [shortPrompt, setShortPrompt] = useState("");
+  const [longPrompt, setLongPrompt] = useState(null);
+  const [promptLengthValue, setPromptLengthValue] = useState(false);
   const window = useWindowDimensions();
 
   const [isImagePickerVisible, setImagePickerVisible] = useState(false);
@@ -52,7 +56,17 @@ export default function App() {
   };
 
   const swapImage = () => {
+    setInferredImage(imageSource);
     setImageSource(inferredImage);
+  };
+
+  const switchPromptFunction = () => {
+    setPromptLengthValue(!promptLengthValue);
+    if(promptLengthValue) {
+      setInferredPrompt(shortPrompt);
+    } else {
+      setInferredPrompt(longPrompt);
+    }
   };
 
   const getBase64Image = () => { 
@@ -117,7 +131,7 @@ export default function App() {
   
 
   useEffect(() => {
-    if (parameters != ''){
+    if (parameters ){
       console.log(parameters)
       setActivity(true);
       if (false) { // isImagePickerVisible  Check for timeline on IP Adapater inference API
@@ -180,9 +194,21 @@ export default function App() {
         })
       })
       .then(response => response.json())
-      .then( responseData => {
-        console.log(responseData[0]["generated_text"] );
-        setInferredPrompt(responseData[0]["generated_text"]);
+      .then((response) => {
+        const generatedText = response[0]["generated_text"];
+        const splitPrompt = generatedText.split(/Short(?:ened)? (?:Version:)?/i);
+        const longPromptHolder = splitPrompt[0].substring(0,150).split(/\n\n/).slice(-1)[0];
+        const lPrompt =  longPromptHolder + splitPrompt[0].substring(150)
+        const holderShortPrompt = splitPrompt[1].substring(0,150).split(/\n\n/).slice(-1)[0];
+        const sPrompt = holderShortPrompt + splitPrompt[1].substring(150).split(/\n\n/)[0];
+        
+        setLongPrompt(lPrompt);
+        setShortPrompt(sPrompt);
+        if(!promptLengthValue) {
+          setInferredPrompt(sPrompt);
+        }else {
+          setInferredPrompt(lPrompt);
+        }
         setActivity(false);
       })
       .catch(error => console.error('Error:', error));
@@ -233,7 +259,8 @@ export default function App() {
                   inferredPrompt={inferredPrompt}
                 />
               </View>
-              <View style={styles.dropdownRowContainer}>
+              <View style={[styles.rowContainer, 
+                          { padding:0 }]}>
                 <DropDownComponent passModelID={passModelIDWrapper} />
                 <View style={styles.columnContainer}>
                   {activity ? (
@@ -243,22 +270,62 @@ export default function App() {
                       style={{ margin: 25 }}
                     />
                   ) : (
-                    <div>
+                    <>{longPrompt ? 
+                    <><View style={[styles.rowContainer, {padding:0}]}>
+                    <Pressable
+                        onPress={() => {
+                          setTextInference(true);
+                        }}
+                        style={({ pressed }) => [
+                          { backgroundColor: pressed ? "#958DA5" : "#9DA58D" ,
+                           width: 40, height: 40, borderRadius: 20, margin:10}]}
+                      >
+                      </Pressable>
+                      <View style={styles.columnContainer}>
+                      <View style={[styles.rowContainer, {padding:0}]}>
+                      <Text
+                        style={[
+                          { color: promptLengthValue ? "#FFFFFF" : "#9FA8DA", marginRight: 15},
+                          styles.sliderText,
+                        ]}
+                      >
+                        Short
+                      </Text>
+                      <Text
+                        style={[
+                          { color: promptLengthValue ? "#9FA8DA" : "#FFFFFF", marginRight: 15},
+                          styles.sliderText,
+                        ]}
+                      >
+                        Long
+                      </Text>
+                      </View>
+                      <Switch
+                        trackColor={{ false: "#958DA5", true: "#767577" }}
+                        thumbColor="#B58392"
+                        activeThumbColor="#6750A4"
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={switchPromptFunction}
+                        value={promptLengthValue}
+                      />
+                    </View>
+                    </View>
+                    </> : 
                       <Pressable
                         onPress={() => {
                           setTextInference(true);
                         }}
                         style={({ pressed }) => [
-                          { backgroundColor: pressed ? "#958DA5" : "#9DA58D" },
+                          { backgroundColor: pressed ? "#958DA5" : "#9DA58D"},
                           styles.button,
                         ]}
                       >
                         {({ pressed }) => (
                           <Text style={styles.promptText}>
-                            {pressed ? "INFERRED!" : "Prompt"}
+                            {pressed ? "PROMPTED!" : "Prompt"}
                           </Text>
                         )}
-                      </Pressable>
+                      </Pressable>}
                       <Pressable
                         onPress={() => {
                           setParameters(
@@ -266,7 +333,7 @@ export default function App() {
                           );
                         }}
                         style={({ pressed }) => [
-                          { backgroundColor: pressed ? "#9DA58D" : "#958DA5" },
+                          { backgroundColor: pressed ? "#9DA58D" : "#958DA5", marginBottom:20 },
                           styles.button,
                         ]}
                       >
@@ -276,7 +343,7 @@ export default function App() {
                           </Text>
                         )}
                       </Pressable>
-                    </div>
+                    </>
                   )}
                   {modelError ? (
                     <Text style={styles.promptText}>Model Error!</Text>
@@ -322,7 +389,7 @@ export default function App() {
 
             <View style={styles.rightColumnContainer}>
               {inferredImage && (
-                <Image source={inferredImage} style={styles.imageStyle} />
+                <Image source={typeof inferredImage === 'number' ? inferredImage : { uri: inferredImage }} style={styles.imageStyle} />
               )}
               <Text style={styles.promptText}>{returnedPrompt}</Text>
             </View>
@@ -337,7 +404,47 @@ export default function App() {
             {activity ? (
               <ActivityIndicator size="large" color="#B58392" style={{ margin: 25 }}/>
             ) : (
-              <div>
+              <>{longPrompt ? 
+                <><View style={[styles.rowContainer, {padding:0}]}>
+                <Pressable
+                    onPress={() => {
+                      setTextInference(true);
+                    }}
+                    style={({ pressed }) => [
+                      { backgroundColor: pressed ? "#958DA5" : "#9DA58D" ,
+                       width: 40, height: 40, borderRadius: 20, margin:10}]}
+                  >
+                  </Pressable>
+                  <View style={styles.columnContainer}>
+                  <View style={[styles.rowContainer, {padding:0}]}>
+                  <Text
+                    style={[
+                      { color: promptLengthValue ? "#FFFFFF" : "#9FA8DA", marginRight: 15},
+                      styles.sliderText,
+                    ]}
+                  >
+                    Short
+                  </Text>
+                  <Text
+                    style={[
+                      { color: promptLengthValue ? "#9FA8DA" : "#FFFFFF", marginRight: 15},
+                      styles.sliderText,
+                    ]}
+                  >
+                    Long
+                  </Text>
+                  </View>
+                  <Switch
+                    trackColor={{ false: "#958DA5", true: "#767577" }}
+                    thumbColor="#B58392"
+                    activeThumbColor="#6750A4"
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={switchPromptFunction}
+                    value={promptLengthValue}
+                  />
+                </View>
+                </View>
+                </> :<>
                 <Pressable
                   onPress={() => {
                     setTextInference(true);
@@ -349,10 +456,10 @@ export default function App() {
                 >
                   {({ pressed }) => (
                     <Text style={styles.promptText}>
-                      {pressed ? "INFERRED!" : "Prompt"}
+                      {pressed ? "PROMPTED!" : "Prompt"}
                     </Text>
                   )}
-                </Pressable>
+                </Pressable></>}
                 <Pressable
                   onPress={() => {
                     setParameters(`${prompt}-${steps}-${guidance}-${modelID}`);
@@ -368,7 +475,7 @@ export default function App() {
                     </Text>
                   )}
                 </Pressable>
-              </div>
+              </>
             )}
             {modelError ? (
               <Text style={styles.promptText}>Model Error!</Text>
@@ -415,7 +522,7 @@ export default function App() {
             )}
             <SliderComponent setSteps={setSteps} setGuidance={setGuidance} />
             {inferredImage && (
-              <Image source={inferredImage} style={styles.imageStyle} />
+              <Image source={typeof inferredImage === 'number' ? inferredImage : { uri: inferredImage }} style={styles.imageStyle} />
             )}
             <Text style={styles.promptText}>{returnedPrompt}</Text>
           </View>
@@ -451,13 +558,6 @@ const styles = StyleSheet.create({
     overflow: "visible",
     padding: 20,
   },
-  dropdownRowContainer: {
-    backgroundColor: colors.backgroundColor,
-    display: "flex",
-    flexDirection: "row",
-    marginTop: 10,
-    overflow: "visible",
-  },
   leftColumnContainer: {
     flex: 1,
     alignItems: "center", // Center items horizontally
@@ -477,7 +577,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   button: {
-    margin: 20,
+    margin: 10,
     borderRadius: 4,
     paddingHorizontal: 32,
     elevation: 3,
@@ -557,6 +657,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     alignSelf: "center",
+  },
+  sliderText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+    letterSpacing: 2,
+    lineHeight: 30,
+    fontFamily: "Sigmar",
   },
 });
 
