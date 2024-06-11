@@ -18,10 +18,10 @@ useEffect(() => {
         in fewer than 500 tokens. A long version and a shortened version.  Make both descriptive and creative. \
         Here is the seed string. : ${alteredPrompt}`;
       
-      fetch('http://localhost:8085/inferencePrompt', {             // Change this to your API endpoint and use a library  
-        method: 'POST',                                           // Axios if not running in the same container
-        headers: {
-          'Content-Type': 'application/json',
+      fetch('/inferencePrompt', {             // Change this to your API endpoint and use a library  
+        method: 'POST',                         // Axios if not running in the same container
+        headers: {                               // http://localhost:8085/inferencePrompt if running locally or w/e port your server is using or 
+          'Content-Type': 'application/json',     // /inferencePrompt if running in a container
         },
         body: JSON.stringify({
           prompt: alteredPrompt,

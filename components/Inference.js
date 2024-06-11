@@ -19,6 +19,7 @@ const getBase64Image = () => {
     .catch(error => console.error(error));
   }
 
+  // useEffect hook for img2img
   useEffect(() =>{
     if(encodedImage){
       const modelIDHard = "stabilityai/stable-diffusion-xl-refiner-1.0"
@@ -35,9 +36,9 @@ const getBase64Image = () => {
       };
     }
     fetch('/api', {              // Change this to your API endpoint and use a library  
-      method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      method: 'POST',                               // Axios if not running in the same container
+        headers: {                                  // http://localhost:8085/api if running locally or w/e port your server is using or                    
+          'Content-Type': 'application/json',         // /api if running in a container
         },
         body: JSON.stringify({
           prompt: prompt,
@@ -64,6 +65,7 @@ const getBase64Image = () => {
 },[encodedImage])
   
 
+// useEffect hook for txt2img
   useEffect(() => {
     if (parameters ){
       console.log(parameters)
@@ -72,10 +74,10 @@ const getBase64Image = () => {
         getBase64Image();
       }else{
       const ipScaleHolder = {"key1": {"key2": [0.0, 0.0]}}
-      fetch('http://localhost:8085/api', {             // Change this to your API endpoint and use a library  
-      method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      fetch('/api', {             // Change this to your API endpoint and use a library  
+      method: 'POST',                                  // Axios if not running in the same container
+        headers: {                                   // http://localhost:8085/api if running locally or w/e port your server is using or
+          'Content-Type': 'application/json',           // /api if running in a container
         },
         body: JSON.stringify({
           prompt: prompt,
