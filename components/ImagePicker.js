@@ -16,14 +16,14 @@ const MyImagePicker = ({
       alert("Sorry, we need media library permissions to select an image.");
       return;
     }
-    console.log("Selecting image")
+    console.log("Selecting image");
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-    
+
     if (!result.cancelled) {
       setImageSource(result.assets[0].uri);
     }
@@ -78,9 +78,14 @@ const MyImagePicker = ({
         </View>
       </View>
 
-      {imageSource &&
-        <Image source={typeof imageSource === 'number' ? imageSource : { uri: imageSource }} style={styles.image} />
-        }
+      {imageSource && (
+        <Image
+          source={
+            typeof imageSource === "number" ? imageSource : { uri: imageSource }
+          }
+          style={styles.image}
+        />
+      )}
       <Pressable style={styles.selectButton} onPress={selectImage}>
         <Text style={styles.promptText}>Select</Text>
       </Pressable>

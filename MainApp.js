@@ -21,10 +21,9 @@ import MyImagePicker from "./components/ImagePicker";
 import Buttons from "./components/Buttons";
 import Expand from "./components/Expand";
 import PromptInference from "./components/Prompt";
-import Inference from "./components/Inference"
+import Inference from "./components/Inference";
 
 const assetImage = require("./assets/avocado.jpg");
-
 
 export default function App() {
   useFonts({ Sigmar: require("./assets/Sigmar/Sigmar-Regular.ttf") });
@@ -45,6 +44,7 @@ export default function App() {
   const [longPrompt, setLongPrompt] = useState(null);
   const [promptLengthValue, setPromptLengthValue] = useState(false);
   const [modelMessage, setModelMessage] = useState("");
+  const [inferrenceButton, setInferrenceButton] = useState(null);
   const window = useWindowDimensions();
 
   const [isImagePickerVisible, setImagePickerVisible] = useState(false);
@@ -64,13 +64,13 @@ export default function App() {
 
   const switchPromptFunction = () => {
     setPromptLengthValue(!promptLengthValue);
-    if(promptLengthValue) {
+    if (promptLengthValue) {
       setInferredPrompt(shortPrompt);
     } else {
       setInferredPrompt(longPrompt);
     }
   };
- 
+
   const setParametersWrapper = () => {
     setParameters(`${prompt}-${steps}-${guidance}-${modelID}`);
   };
@@ -78,8 +78,35 @@ export default function App() {
   return (
     // Main container
     <View style={styles.titlecontainer}>
-      <PromptInference prompt={prompt} textInference={textInference} setTextInference={setTextInference} setLongPrompt={setLongPrompt} setShortPrompt={setShortPrompt} setInferredPrompt={setInferredPrompt} promptLengthValue={promptLengthValue} setActivity={setActivity} setModelError={setModelError} />
-      <Inference setModelMessage={setModelMessage} imageSource={imageSource} parameters={parameters} modelID={modelID} prompt={prompt} isImagePickerVisible={isImagePickerVisible} styleSwitch={styleSwitch} settingSwitch={settingSwitch} guidance={guidance} steps={steps} setActivity={setActivity} setModelError={setModelError} setReturnedPrompt={setReturnedPrompt} setInferredImage={setInferredImage}/>
+      <PromptInference
+        prompt={prompt}
+        textInference={textInference}
+        setTextInference={setTextInference}
+        setLongPrompt={setLongPrompt}
+        setShortPrompt={setShortPrompt}
+        setInferredPrompt={setInferredPrompt}
+        promptLengthValue={promptLengthValue}
+        setActivity={setActivity}
+        setModelError={setModelError}
+      />
+      <Inference
+        setInferrenceButton={setInferrenceButton}
+        inferrenceButton={inferrenceButton}
+        setModelMessage={setModelMessage}
+        imageSource={imageSource}
+        parameters={parameters}
+        modelID={modelID}
+        prompt={prompt}
+        isImagePickerVisible={isImagePickerVisible}
+        styleSwitch={styleSwitch}
+        settingSwitch={settingSwitch}
+        guidance={guidance}
+        steps={steps}
+        setActivity={setActivity}
+        setModelError={setModelError}
+        setReturnedPrompt={setReturnedPrompt}
+        setInferredImage={setInferredImage}
+      />
       <BreathingComponent />
       <ScrollView
         scrollY={true}
@@ -87,7 +114,6 @@ export default function App() {
         showsVerticalScrollIndicator={false}
       >
         {window.width > 1000 ? (
-          
           <View style={styles.rowContainer}>
             {/* Left column */}
             {isImagePickerVisible && (
@@ -95,12 +121,13 @@ export default function App() {
                 onPress={() => {
                   swapImage();
                 }}
-                style={[styles.swapButton, {
-                  top: window.height / 2 - 15,
-                  left: window.width / 2 - 15,
-                }]
-                }
-                
+                style={[
+                  styles.swapButton,
+                  {
+                    top: window.height / 2 - 15,
+                    left: window.width / 2 - 15,
+                  },
+                ]}
               >
                 <Image
                   source={require("./assets/circle.png")}
@@ -116,11 +143,22 @@ export default function App() {
                   inferredPrompt={inferredPrompt}
                 />
               </View>
-              <View style={[styles.rowContainer, 
-                          { padding:0 }]}>
-                <DropDownComponent passModelID={passModelIDWrapper} isImagePickerVisible={isImagePickerVisible} parameters={parameters} />
+              <View style={[styles.rowContainer, { padding: 0 }]}>
+                <DropDownComponent
+                  passModelID={passModelIDWrapper}
+                  isImagePickerVisible={isImagePickerVisible}
+                  parameters={parameters}
+                />
                 <View style={styles.columnContainer}>
-                <Buttons activity={activity} longPrompt={longPrompt} setTextInference={setTextInference} switchPromptFunction={switchPromptFunction} promptLengthValue={promptLengthValue} setParametersWrapper={setParametersWrapper}/>
+                  <Buttons
+                    setInferrenceButton={setInferrenceButton}
+                    activity={activity}
+                    longPrompt={longPrompt}
+                    setTextInference={setTextInference}
+                    switchPromptFunction={switchPromptFunction}
+                    promptLengthValue={promptLengthValue}
+                    setParametersWrapper={setParametersWrapper}
+                  />
                   {modelError ? (
                     <Text style={styles.promptText}>{modelMessage}</Text>
                   ) : (
@@ -128,9 +166,13 @@ export default function App() {
                   )}
                 </View>
               </View>
-              
+
               <View>
-                <Expand isImagePickerVisible={isImagePickerVisible} setImagePickerVisible={setImagePickerVisible} window={window}/>
+                <Expand
+                  isImagePickerVisible={isImagePickerVisible}
+                  setImagePickerVisible={setImagePickerVisible}
+                  window={window}
+                />
                 {isImagePickerVisible && (
                   <MyImagePicker
                     imageSource={imageSource}
@@ -149,26 +191,48 @@ export default function App() {
             </View>
             <View style={styles.rightColumnContainer}>
               {inferredImage && (
-                <Image source={typeof inferredImage === 'number' ? inferredImage : { uri: inferredImage }} style={styles.imageStyle} />
+                <Image
+                  source={
+                    typeof inferredImage === "number"
+                      ? inferredImage
+                      : { uri: inferredImage }
+                  }
+                  style={styles.imageStyle}
+                />
               )}
               <Text style={styles.promptText}>{returnedPrompt}</Text>
             </View>
           </View>
-        ) 
-        : (
+        ) : (
           <View style={styles.columnContainer}>
             <PromptInputComponent
               setPrompt={setPrompt}
               inferredPrompt={inferredPrompt}
             />
-            <DropDownComponent passModelID={passModelIDWrapper} isImagePickerVisible={isImagePickerVisible} parameters={parameters} />
-            <Buttons activity={activity} longPrompt={longPrompt} setTextInference={setTextInference} switchPromptFunction={switchPromptFunction} promptLengthValue={promptLengthValue} setParametersWrapper={setParametersWrapper}/>   
+            <DropDownComponent
+              passModelID={passModelIDWrapper}
+              isImagePickerVisible={isImagePickerVisible}
+              parameters={parameters}
+            />
+            <Buttons
+              setInferrenceButton={setInferrenceButton}
+              activity={activity}
+              longPrompt={longPrompt}
+              setTextInference={setTextInference}
+              switchPromptFunction={switchPromptFunction}
+              promptLengthValue={promptLengthValue}
+              setParametersWrapper={setParametersWrapper}
+            />
             {modelError ? (
               <Text style={styles.promptText}>{modelMessage}</Text>
             ) : (
               <></>
             )}
-            <Expand isImagePickerVisible={isImagePickerVisible} setImagePickerVisible={setImagePickerVisible} window={window}/>
+            <Expand
+              isImagePickerVisible={isImagePickerVisible}
+              setImagePickerVisible={setImagePickerVisible}
+              window={window}
+            />
             {isImagePickerVisible && (
               <>
                 <MyImagePicker
@@ -179,11 +243,12 @@ export default function App() {
                   settingSwitch={settingSwitch}
                   setSettingSwitch={setSettingSwitch}
                 />
-                <Pressable 
+                <Pressable
                   onPress={() => {
                     swapImage();
                   }}
-                  style={styles.swapButtonColumn}>
+                  style={styles.swapButtonColumn}
+                >
                   <Image
                     source={require("./assets/circle.png")}
                     style={styles.changeButton}
@@ -193,7 +258,14 @@ export default function App() {
             )}
             <SliderComponent setSteps={setSteps} setGuidance={setGuidance} />
             {inferredImage && (
-              <Image source={typeof inferredImage === 'number' ? inferredImage : { uri: inferredImage }} style={styles.imageStyle} />
+              <Image
+                source={
+                  typeof inferredImage === "number"
+                    ? inferredImage
+                    : { uri: inferredImage }
+                }
+                style={styles.imageStyle}
+              />
             )}
             <Text style={styles.promptText}>{returnedPrompt}</Text>
           </View>
@@ -305,8 +377,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     alignSelf: "center",
-  }
-  
+  },
 });
-
-
