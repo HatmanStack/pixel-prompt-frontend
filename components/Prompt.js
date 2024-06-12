@@ -17,6 +17,7 @@ useEffect(() => {
       alteredPrompt = `I'm giving you a seed string for a stable diffusion model. Return two versions \
         in fewer than 500 tokens. A long version and a shortened version.  Make both descriptive and creative. \
         Here is the seed string. : ${alteredPrompt}`;
+      console.log(alteredPrompt)
       
       fetch('/inferencePrompt', {             // Change this to your API endpoint and use a library  
         method: 'POST',                         // Axios if not running in the same container

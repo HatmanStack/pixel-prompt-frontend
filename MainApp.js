@@ -41,14 +41,14 @@ export default function App() {
   const [modelError, setModelError] = useState(false);
   const [returnedPrompt, setReturnedPrompt] = useState("Avocado Armchair");
   const [textInference, setTextInference] = useState(false);
-  const [encodedImage, setEncodedImage] = useState('')
   const [shortPrompt, setShortPrompt] = useState("");
   const [longPrompt, setLongPrompt] = useState(null);
   const [promptLengthValue, setPromptLengthValue] = useState(false);
+  const [modelMessage, setModelMessage] = useState("");
   const window = useWindowDimensions();
 
   const [isImagePickerVisible, setImagePickerVisible] = useState(false);
-  const [imageSource, setImageSource] = useState();
+  const [imageSource, setImageSource] = useState(assetImage);
   const [settingSwitch, setSettingSwitch] = useState(false);
   const [styleSwitch, setStyleSwitch] = useState(false);
 
@@ -78,8 +78,8 @@ export default function App() {
   return (
     // Main container
     <View style={styles.titlecontainer}>
-      <PromptInference prompt={prompt} textInference={textInference} setTextInference={setTextInference} setLongPrompt={setLongPrompt} setShortPrompt={setShortPrompt} setInferredPrompt={setInferredPrompt} promptLengthValue={promptLengthValue} setActivity={setActivity} setModelError={setModelError} setEncodedImage={setEncodedImage} encodedImage={encodedImage}/>
-      <Inference parameters={parameters} modelID={modelID} prompt={prompt} isImagePickerVisible={isImagePickerVisible} styleSwitch={styleSwitch} settingSwitch={settingSwitch} guidance={guidance} steps={steps} setActivity={setActivity} setModelError={setModelError} setReturnedPrompt={setReturnedPrompt} setInferredImage={setInferredImage}/>
+      <PromptInference prompt={prompt} textInference={textInference} setTextInference={setTextInference} setLongPrompt={setLongPrompt} setShortPrompt={setShortPrompt} setInferredPrompt={setInferredPrompt} promptLengthValue={promptLengthValue} setActivity={setActivity} setModelError={setModelError} />
+      <Inference setModelMessage={setModelMessage} imageSource={imageSource} parameters={parameters} modelID={modelID} prompt={prompt} isImagePickerVisible={isImagePickerVisible} styleSwitch={styleSwitch} settingSwitch={settingSwitch} guidance={guidance} steps={steps} setActivity={setActivity} setModelError={setModelError} setReturnedPrompt={setReturnedPrompt} setInferredImage={setInferredImage}/>
       <BreathingComponent />
       <ScrollView
         scrollY={true}
@@ -118,11 +118,11 @@ export default function App() {
               </View>
               <View style={[styles.rowContainer, 
                           { padding:0 }]}>
-                <DropDownComponent passModelID={passModelIDWrapper} />
+                <DropDownComponent passModelID={passModelIDWrapper} isImagePickerVisible={isImagePickerVisible} parameters={parameters} />
                 <View style={styles.columnContainer}>
                 <Buttons activity={activity} longPrompt={longPrompt} setTextInference={setTextInference} switchPromptFunction={switchPromptFunction} promptLengthValue={promptLengthValue} setParametersWrapper={setParametersWrapper}/>
                   {modelError ? (
-                    <Text style={styles.promptText}>Model Error!</Text>
+                    <Text style={styles.promptText}>{modelMessage}</Text>
                   ) : (
                     <></>
                   )}
@@ -161,10 +161,10 @@ export default function App() {
               setPrompt={setPrompt}
               inferredPrompt={inferredPrompt}
             />
-            <DropDownComponent passModelID={passModelIDWrapper} />
+            <DropDownComponent passModelID={passModelIDWrapper} isImagePickerVisible={isImagePickerVisible} parameters={parameters} />
             <Buttons activity={activity} longPrompt={longPrompt} setTextInference={setTextInference} switchPromptFunction={switchPromptFunction} promptLengthValue={promptLengthValue} setParametersWrapper={setParametersWrapper}/>   
             {modelError ? (
-              <Text style={styles.promptText}>Model Error!</Text>
+              <Text style={styles.promptText}>{modelMessage}</Text>
             ) : (
               <></>
             )}
