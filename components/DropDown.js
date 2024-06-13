@@ -4,42 +4,23 @@ import { Dropdown } from "react-native-element-dropdown";
 
 export default function DropDownComponent({
   passModelID,
-  isImagePickerVisible,
-  parameters,
+  
 }) {
-  const [dropDownData, setDropDownData] = useState([
-    { label: "pix2pix", value: "timbrooks/instruct-pix2pix" },
-    {
-      label: "Stable Diffusion Refiner",
-      value: "stabilityai/stable-diffusion-xl-refiner-1.0",
-    },
-  ]);
-  const [placeholderModelID, setPlaceholderModelID] = useState("Model ID");
+    const [placeholderModelID, setPlaceholderModelID] = useState("Model ID");
+  
 
-  useEffect(() => {
-    let data = [];
-    if (isImagePickerVisible) {
-      data = [
-        { label: "pix2pix", value: "timbrooks/instruct-pix2pix" },
-        {
-          label: "Stable Diffusion",
-          value: "stabilityai/stable-diffusion-xl-refiner-1.0",
-        },
-      ];
-      if (parameters) {
-        setPlaceholderModelID("pix2pix");
-        passModelID("timbrooks/instruct-pix2pix");
-      }
-    } else {
-      data = [
-        {
-          label: "Step Aware",
-          value: "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep",
-        },
+ 
+      const data = [
         {
           label: "Stable Diffusion",
           value: "stabilityai/stable-diffusion-xl-base-1.0",
         },
+        {
+          label: "Step Aware",
+          value: "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep",
+        },
+        
+        { label: "pix2pix", value: "timbrooks/instruct-pix2pix" },
         { label: "Voxel", value: "Fictiverse/Stable_Diffusion_VoxelArt_Model" },
         {
           label: "Paper Cut Out",
@@ -59,34 +40,24 @@ export default function DropDownComponent({
           value: "juliajoanna/sdxl-flintstones_finetuning_1",
         },
         { label: "SegMind", value: "segmind/Segmind-Vega" },
-        { label: "Mickey 1928", value: "Pclanglais/Mickey-1928" },
-        {
-          label: "Maps",
-          value: "firella/202404032300-oldvis-choropleth-lora-sdxl",
-        },
         { label: "Absolute Reality", value: "digiplay/AbsoluteReality_v1.8.1" },
         { label: "Photo", value: "dreamlike-art/dreamlike-photoreal-2.0" },
         { label: "Acorn", value: "digiplay/Acorn_Photo_v1" },
       ];
-      if (parameters) {
-        setPlaceholderModelID("Step Aware");
-        passModelID("SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep");
-      }
-    }
-    setDropDownData(data);
-  }, [isImagePickerVisible]);
+      
 
   return (
     <Dropdown
       style={styles.dropdown}
       selectedTextStyle={styles.selectedTextStyle}
       placeholderStyle={styles.placeholderStyle}
-      data={dropDownData}
+      data={data}
       labelField="label"
       valueField="value"
       placeholder={placeholderModelID}
       onChange={(item) => {
         passModelID(item.value);
+        setPlaceholderModelID(item.label);
       }}
     />
   );

@@ -36,6 +36,19 @@ const Inference = ({
       .catch((error) => console.error(error));
   };
 
+  useEffect(() => {
+    const modelData = 'SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep';
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: modelData
+        })
+    };
+    fetch('/core', requestOptions)
+}, []);
+    
+
   /** useEffect hook for img2img */
 
   useEffect(() => {
@@ -96,7 +109,7 @@ const Inference = ({
     if (inferrenceButton) {
       console.log(parameters);
       setActivity(true);
-      if (isImagePickerVisible) {  //  Check for timeline on IP Adapater inference API
+      if (ModelID.includes('pix2pix')) {  //  Check for timeline on IP Adapater inference API
         setModelMessage("Inference API img2img NotAvailable");
         setActivity(false);
         setModelError(true);
@@ -104,7 +117,7 @@ const Inference = ({
         // getBase64Image();
       } else {
         const ipScaleHolder = { key1: { key2: [0.0, 0.0] } };
-        fetch("/api", {                          // Change this to your API endpoint and use a library                                         
+        fetch("http://localhost:8085/api", {                          // Change this to your API endpoint and use a library                                         
           method: "POST",                       // Axios if not running in the same container
           headers: {                            // http://localhost:8085/api if running locally or w/e port your server is using or
              "Content-Type": "application/json", // /api if running in a container

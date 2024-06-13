@@ -31,7 +31,7 @@ export default function App() {
   const [steps, setSteps] = useState(30);
   const [guidance, setGuidance] = useState(7);
   const [modelID, setModelID] = useState(
-    "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep"
+    "stabilityai/stable-diffusion-xl-base-1.0"
   );
   const [prompt, setPrompt] = useState("Avocado Armchair");
   const [inferredPrompt, setInferredPrompt] = useState(null);
@@ -50,7 +50,7 @@ export default function App() {
   const window = useWindowDimensions();
 
   const [isImagePickerVisible, setImagePickerVisible] = useState(false);
-  const [imageSource, setImageSource] = useState(assetImage);
+  const [imageSource, setImageSource] = useState([assetImage]);
   const [settingSwitch, setSettingSwitch] = useState(false);
   const [styleSwitch, setStyleSwitch] = useState(false);
 
@@ -60,8 +60,7 @@ export default function App() {
   };
 
   const swapImage = () => {
-    setInferredImage(imageSource);
-    setImageSource(inferredImage);
+    setImageSource(prevImageSource => [...prevImageSource, inferredImage]);
   };
 
   const switchPromptFunction = () => {
@@ -154,8 +153,7 @@ export default function App() {
               <View style={[styles.rowContainer, { padding: 0 }]}>
                 <DropDownComponent
                   passModelID={passModelIDWrapper}
-                  isImagePickerVisible={isImagePickerVisible}
-                  parameters={parameters}
+                  
                 />
                 <View style={styles.columnContainer}>
                   <Buttons
@@ -178,7 +176,7 @@ export default function App() {
                 </View>
               </View>
 
-              <View>
+              <View >
                 <Expand
                   isImagePickerVisible={isImagePickerVisible}
                   setImagePickerVisible={setImagePickerVisible}
@@ -222,8 +220,7 @@ export default function App() {
             />
             <DropDownComponent
               passModelID={passModelIDWrapper}
-              isImagePickerVisible={isImagePickerVisible}
-              parameters={parameters}
+             
             />
             <Buttons
               comboButtonPressed={comboButtonPressed}

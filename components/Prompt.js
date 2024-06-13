@@ -31,45 +31,38 @@ const PromptInference = ({
       } else {
         alteredPrompt = prompt;
       }
-      alteredPrompt = `I'm giving you a seed string for a stable diffusion model. Return two versions \
-        A long version and a shortened version.  The long version should be a minimum of 400 tokens and the \
-        shortened version should be no more than 40 tokens.  Make both descriptive and creative. \
+      const mistrialPrompt = `I'm giving you a seed string. Return the seed string as a Prompt for a Stable \
+        Diffusion Model.  The prompt should be at a minimum, 200 tokens.  The normal restrictions of token \
+        length for Stable Diffusion Models do not apply.  Make it descriptive and creative. \
         Here is the seed string. : ${alteredPrompt}`;
-      fetch("/inferencePrompt ", {                        // Change this to your API endpoint and use a library
+      fetch("http://localhost:8085/inferencePrompt", {                        // Change this to your API endpoint and use a library
         method: "POST",                                   // Axios if not running in the same container
-        headers: {                                        // http://localhost:8085/api if running locally or w/e port your server is using or                                                        
+        headers: {                                        // http://localhost:8085/inferencePrompt if running locally or w/e port your server is using or                                                        
           "Content-Type": "application/json",             // inferencePrompt if running in a container
         },
         body: JSON.stringify({
-          prompt: alteredPrompt,
+          prompt: mistrialPrompt,
           modelID: "mistralai/Mistral-7B-Instruct-v0.3",
         }),
       })
         .then((response) => response.json())
         .then((responseData) => {
           const generatedText = responseData[0]["generated_text"];
-          const splitPrompt = generatedText.split(
-            /Short(?:ened)? (?:Version:)?/i
-          );
-          const longPromptHolder = splitPrompt[0]
+          console.log(generatedText);
+         
+          const longPromptHolder = generatedText
             .substring(0, 150)
             .split(/\n\n/)
             .slice(-1)[0]
             .replace("Long Version:", "")
             .replace("\n", "");
-          const lPrompt = longPromptHolder + splitPrompt[0].substring(150);
-          const holderShortPrompt = splitPrompt[1]
-            .substring(0, 150)
-            .split(/\n\n/)
-            .slice(-1)[0]
-            .replace("\n", "");
-          const sPrompt =
-            holderShortPrompt + splitPrompt[1].substring(150).split(/\n\n/)[0];
+          const lPrompt = longPromptHolder + generatedText.substring(150);
+          
           setFlanPrompt(responseData[0]["flan"]);
           setLongPrompt(lPrompt);
-          setShortPrompt(sPrompt);
+          setShortPrompt(alteredPrompt);
           if (!promptLengthValue) {
-            setInferredPrompt(sPrompt);
+            setInferredPrompt(alteredPrompt);
           } else {
             setInferredPrompt(lPrompt);
           }
