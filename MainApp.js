@@ -45,6 +45,8 @@ export default function App() {
   const [promptLengthValue, setPromptLengthValue] = useState(false);
   const [modelMessage, setModelMessage] = useState("");
   const [inferrenceButton, setInferrenceButton] = useState(null);
+  const [flanPrompt, setFlanPrompt] = useState(null);
+  const [comboButtonPressed, setComboButtonPressed] = useState(false);
   const window = useWindowDimensions();
 
   const [isImagePickerVisible, setImagePickerVisible] = useState(false);
@@ -69,6 +71,11 @@ export default function App() {
     } else {
       setInferredPrompt(longPrompt);
     }
+    setComboButtonPressed(false);
+  };
+
+  const switchToFlan = () => {
+    setInferredPrompt(flanPrompt);
   };
 
   const setParametersWrapper = () => {
@@ -79,6 +86,7 @@ export default function App() {
     // Main container
     <View style={styles.titlecontainer}>
       <PromptInference
+        setFlanPrompt={setFlanPrompt}
         prompt={prompt}
         textInference={textInference}
         setTextInference={setTextInference}
@@ -151,6 +159,9 @@ export default function App() {
                 />
                 <View style={styles.columnContainer}>
                   <Buttons
+                    comboButtonPressed={comboButtonPressed}
+                    setComboButtonPressed={setComboButtonPressed}
+                    switchToFlan={switchToFlan}
                     setInferrenceButton={setInferrenceButton}
                     activity={activity}
                     longPrompt={longPrompt}
@@ -215,6 +226,9 @@ export default function App() {
               parameters={parameters}
             />
             <Buttons
+              comboButtonPressed={comboButtonPressed}
+              setComboButtonPressed={setComboButtonPressed}
+              switchToFlan={switchToFlan}
               setInferrenceButton={setInferrenceButton}
               activity={activity}
               longPrompt={longPrompt}

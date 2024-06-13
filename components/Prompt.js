@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import seeds from "../assets/seeds.json";
 
 const PromptInference = ({
+  setFlanPrompt,
   prompt,
   textInference,
   setTextInference,
@@ -31,15 +32,12 @@ const PromptInference = ({
         alteredPrompt = prompt;
       }
       alteredPrompt = `I'm giving you a seed string for a stable diffusion model. Return two versions \
-        in fewer than 500 tokens. A long version and a shortened version.  Make both descriptive and creative. \
+        A long version and a shortened version.  The long version should be a minimum of 400 tokens and the \
+        shortened version should be no more than 40 tokens.  Make both descriptive and creative. \
         Here is the seed string. : ${alteredPrompt}`;
-      console.log(alteredPrompt);
-
-      fetch("/inferencePrompt ", {
-                                                          // Change this to your API endpoint and use a library
+      fetch("/inferencePrompt ", {                        // Change this to your API endpoint and use a library
         method: "POST",                                   // Axios if not running in the same container
-        headers: {
-                                                          // http://localhost:8085/inferencePrompt if running locally or w/e port your server is using or
+        headers: {                                        // http://localhost:8085/api if running locally or w/e port your server is using or                                                        
           "Content-Type": "application/json",             // inferencePrompt if running in a container
         },
         body: JSON.stringify({
@@ -67,7 +65,7 @@ const PromptInference = ({
             .replace("\n", "");
           const sPrompt =
             holderShortPrompt + splitPrompt[1].substring(150).split(/\n\n/)[0];
-
+          setFlanPrompt(responseData[0]["flan"]);
           setLongPrompt(lPrompt);
           setShortPrompt(sPrompt);
           if (!promptLengthValue) {

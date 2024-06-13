@@ -7,9 +7,13 @@ import {
   Pressable,
   ActivityIndicator,
   Switch,
+  Image,
 } from "react-native";
 
 const Buttons = ({
+  comboButtonPressed,
+  setComboButtonPressed,
+  switchToFlan,
   setInferrenceButton,
   activity,
   longPrompt,
@@ -18,6 +22,7 @@ const Buttons = ({
   promptLengthValue,
   setParametersWrapper,
 }) => {
+  
   return (
     <>
       {activity ? (
@@ -30,7 +35,7 @@ const Buttons = ({
         <>
           {longPrompt ? (
             <>
-              <View style={[styles.rowContainer, { padding: 0 }]}>
+              <View style={[styles.rowContainer]}>
                 <Pressable
                   onPress={() => {
                     setTextInference(true);
@@ -46,11 +51,11 @@ const Buttons = ({
                   ]}
                 ></Pressable>
                 <View style={styles.columnContainer}>
-                  <View style={[styles.rowContainer, { padding: 0 }]}>
+                  <View style={[styles.rowContainer]}>
                     <Text
                       style={[
                         {
-                          color: promptLengthValue ? "#FFFFFF" : "#9FA8DA",
+                          color: comboButtonPressed ? '#FFFFFF' : promptLengthValue ? "#FFFFFF" : "#9FA8DA",
                           marginRight: 15,
                         },
                         styles.sliderText,
@@ -61,7 +66,7 @@ const Buttons = ({
                     <Text
                       style={[
                         {
-                          color: promptLengthValue ? "#9FA8DA" : "#FFFFFF",
+                          color: comboButtonPressed ? '#FFFFFF' : promptLengthValue ? "#9FA8DA" : "#FFFFFF",
                           marginRight: 15,
                         },
                         styles.sliderText,
@@ -70,7 +75,9 @@ const Buttons = ({
                       Long
                     </Text>
                   </View>
+                  <View style={[styles.rowContainer, { paddingBottom: 10, justifyContent: "space-between" }]}>
                   <Switch
+                    style={{ marginRight: 40 }} 
                     trackColor={{ false: "#958DA5", true: "#767577" }}
                     thumbColor="#B58392"
                     activeThumbColor="#6750A4"
@@ -78,6 +85,18 @@ const Buttons = ({
                     onValueChange={switchPromptFunction}
                     value={promptLengthValue}
                   />
+                  <Pressable
+                    onPress={() => {
+                      switchToFlan();
+                      setComboButtonPressed(true);
+                    }}
+                  >
+                    <Image
+                    source={comboButtonPressed ? require("../assets/join_colored.png") : require("../assets/join.png")}
+                    style={[{marginRight: 30}, styles.changeButton]}
+                  />
+                    </Pressable>
+                  </View>
                 </View>
               </View>
             </>
@@ -135,7 +154,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 10,
     overflow: "visible",
-    padding: 20,
+    
   },
   columnContainer: {
     flex: 1,
@@ -168,6 +187,17 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     lineHeight: 30,
     fontFamily: "Sigmar",
+  },
+  changeButton: {
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center", // change as needed
+    elevation: 3, // for Android shadow
+    shadowColor: "#000", // for iOS shadow
+    shadowOffset: { width: 0, height: 2 }, // for iOS shadow
+    shadowOpacity: 0.25, // for iOS shadow
+    shadowRadius: 3.84, // for iOS shadow
   },
 });
 

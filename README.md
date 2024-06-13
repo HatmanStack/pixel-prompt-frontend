@@ -42,6 +42,40 @@ To install and run the application, follow these steps:
 
 The app will be running locally at http://localhost:19006. For different environments you can switch the port at startup, use 'npm start -- --port 8080' to start Metro(Expo's Compiler) on port 8080.
 
+### Diffusion
+
+#### Image to Image
+
+- **timbrooks/instruct-pix2pix**
+- **stabilityai/stable-diffusion-xl-refiner-1.0**
+       
+#### Text to Image
+
+- **SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep**
+- **stabilityai/stable-diffusion-xl-base-1.0**
+- **Fictiverse/Fictiverse/Stable_Diffusion_VoxelArt_Model**
+- **Fictiverse/Stable_Diffusion_PaperCut_Model**
+- **dallinmackay/Van-Gogh-diffusion**
+- **nousr/robo-diffusion**
+- **Eugeoter/artiwaifu-diffusion-1.0**
+- **nitrosocke/Arcane-Diffusion**
+- **Fictiverse/Stable_Diffusion_BalloonArt_Model**
+- **prompthero/openjourney**
+- **juliajoanna/sdxl-flintstones_finetuning_1**
+- **segmind/Segmind-Vega**
+- **digiplay/AbsoluteReality_v1.8.1**
+- **dreamlike-art/dreamlike-photoreal-2.0**
+- **digiplay/Acorn_Photo_v1**
+
+### Prompts
+
+- **mistralai/Mistral-7B-Instruct-v0.3**
+- **roborovski/superprompt-v1**
+
+## Functionality
+
+This App was creating using the HuggingFace Inference API.  Although Free to use, some functionality isn't available yet.  The Style and Layout switches are based on the IP adapter which isn't supported by the Inference API. If you decide to use custom endpoints this is available now
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
