@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Pressable, Image } from "react-native";
 import { Dimensions } from "react-native";
 
-const Expand = ({ isImagePickerVisible, setImagePickerVisible, window }) => {
+const Expand = ({ setPlaySound, isImagePickerVisible, setImagePickerVisible, window }) => {
 
   const rightImage = require("../assets/right.png");
   const downImage = require("../assets/down.png");
@@ -17,7 +17,7 @@ const Expand = ({ isImagePickerVisible, setImagePickerVisible, window }) => {
           marginBottom: 0,
         },
       ]}
-      onPress={() => setImagePickerVisible(!isImagePickerVisible)}
+      onPress={() => {setPlaySound("expand"); setImagePickerVisible(!isImagePickerVisible)}}
     >
       {isImagePickerVisible ? (
         <Image

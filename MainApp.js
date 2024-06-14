@@ -22,8 +22,12 @@ import Buttons from "./components/Buttons";
 import Expand from "./components/Expand";
 import PromptInference from "./components/Prompt";
 import Inference from "./components/Inference";
+import SoundPlayer from "./components/Sounds";
 
 const assetImage = require("./assets/avocado.jpg");
+const circleImage = require("./assets/circle.png");
+const addImage = require("./assets/add_image.png");
+const rotatedCircle = require("./assets/rotated_circle.png");
 
 export default function App() {
   useFonts({ Sigmar: require("./assets/Sigmar/Sigmar-Regular.ttf") });
@@ -38,7 +42,7 @@ export default function App() {
   const [parameters, setParameters] = useState(null);
   const [activity, setActivity] = useState(false);
   const [modelError, setModelError] = useState(false);
-  const [returnedPrompt, setReturnedPrompt] = useState("Avocado Armchair");
+  const [returnedPrompt, setReturnedPrompt] = useState("Avacado Armchair")
   const [textInference, setTextInference] = useState(false);
   const [shortPrompt, setShortPrompt] = useState("");
   const [longPrompt, setLongPrompt] = useState(null);
@@ -46,31 +50,47 @@ export default function App() {
   const [modelMessage, setModelMessage] = useState("");
   const [inferrenceButton, setInferrenceButton] = useState(null);
   const [flanPrompt, setFlanPrompt] = useState(null);
-  const [comboButtonPressed, setComboButtonPressed] = useState(false);
   const [isImagePickerVisible, setImagePickerVisible] = useState(false);
-  const [imageSource, setImageSource] = useState([assetImage]);
+  const [imageSource, setImageSource] = useState([addImage]);
   const [settingSwitch, setSettingSwitch] = useState(false);
   const [styleSwitch, setStyleSwitch] = useState(false);
-  const window = useWindowDimensions();
-  const circleImage = require("./assets/circle.png");
+  const [playSound, setSoundPlaying] = useState(null);
+  const [makeSound, setMakeSound] = useState(0);
+ 
 
+  const window = useWindowDimensions();
+  
   const passModelIDWrapper = (x) => {
     setModelError(false);
     setModelID(x);
   };
 
-  const swapImage = () => {
-    setImageSource(prevImageSource => [...prevImageSource, inferredImage]);
+  const setPlaySound = (sound) => {
+    setSoundPlaying(sound);
+    setMakeSound(prevMakeSound => prevMakeSound + 1);
   };
+
+  const swapImage = () => { 
+    setImageSource(prevImageSource => [...prevImageSource, inferredImage]);  
+    setInferredImage(addImage);
+  };
+
+  useEffect(() => {
+    if (imageSource.length > 1 && imageSource.includes(addImage)) {
+      const newImageSource = imageSource.filter((image) => image !== addImage);
+      setImageSource(newImageSource);
+    }
+  }, [imageSource]);
 
   const switchPromptFunction = () => {
     setPromptLengthValue(!promptLengthValue);
     if (promptLengthValue) {
       setInferredPrompt(shortPrompt);
+      setPlaySound("switch");
     } else {
       setInferredPrompt(longPrompt);
+      setPlaySound("switch");
     }
-    setComboButtonPressed(false);
   };
 
   const switchToFlan = () => {
@@ -84,6 +104,7 @@ export default function App() {
   return (
     // Main container
     <View style={styles.titlecontainer}>
+      <SoundPlayer playSound={playSound} makeSound={makeSound}/>
       <PromptInference
         setFlanPrompt={setFlanPrompt}
         prompt={prompt}
@@ -124,40 +145,49 @@ export default function App() {
             {/* Left column */}
             {isImagePickerVisible && (
               <Pressable
-                onPress={() => {
-                  swapImage();
-                }}
-                style={[
-                  styles.swapButton,
-                  {
-                    top: window.height / 2 - 15,
-                    left: window.width / 2 - 15,
-                  },
-                ]}
-              >
+              onPress={() => {
+                swapImage();
+                setPlaySound("swoosh");
+              }}
+              style={({ pressed }) => [
+                styles.swapButton,
+                {
+                  top: window.height / 2 - 15,
+                  left: window.width / 2 - 15,
+                  width: pressed ? 55 : 60,
+                  height: pressed ? 55 : 60,
+                },
+              ]}
+            >
+              {({ pressed }) => (
                 <Image
-                  source={circleImage}
-                  style={styles.changeButton}
+                  source={pressed ? rotatedCircle : circleImage}
+                  style={[
+                    styles.changeButton,
+                    pressed ? { width: 55, height: 55 } : { width: 60, height: 60 },
+                  ]}
                 />
-              </Pressable>
+              )}
+            </Pressable>
             )}
 
             <View style={styles.leftColumnContainer}>
               <View>
                 <PromptInputComponent
+                  setPlaySound={setPlaySound}
                   setPrompt={setPrompt}
                   inferredPrompt={inferredPrompt}
                 />
               </View>
               <View style={[styles.rowContainer, { padding: 0 }]}>
                 <DropDownComponent
+                  setPlaySound={setPlaySound}
                   passModelID={passModelIDWrapper}
                   
                 />
                 <View style={styles.columnContainer}>
                   <Buttons
-                    comboButtonPressed={comboButtonPressed}
-                    setComboButtonPressed={setComboButtonPressed}
+                    setPlaySound={setPlaySound}
                     switchToFlan={switchToFlan}
                     setInferrenceButton={setInferrenceButton}
                     activity={activity}
@@ -177,12 +207,15 @@ export default function App() {
 
               
                 <Expand
+                  setPlaySound={setPlaySound}
                   isImagePickerVisible={isImagePickerVisible}
                   setImagePickerVisible={setImagePickerVisible}
                   window={window}
                 />
                 {isImagePickerVisible && (
                   <MyImagePicker
+                    window={window}
+                    setPlaySound={setPlaySound}
                     imageSource={imageSource}
                     setImageSource={setImageSource}
                     styleSwitch={styleSwitch}
@@ -214,16 +247,17 @@ export default function App() {
         ) : (
           <View style={styles.columnContainer}>
             <PromptInputComponent
+              setPlaySound={setPlaySound}
               setPrompt={setPrompt}
               inferredPrompt={inferredPrompt}
             />
             <DropDownComponent
+              setPlaySound={setPlaySound}
               passModelID={passModelIDWrapper}
              
             />
             <Buttons
-              comboButtonPressed={comboButtonPressed}
-              setComboButtonPressed={setComboButtonPressed}
+              setPlaySound={setPlaySound}
               switchToFlan={switchToFlan}
               setInferrenceButton={setInferrenceButton}
               activity={activity}
@@ -239,14 +273,17 @@ export default function App() {
               <></>
             )}
             <Expand
+              setPlaySound={setPlaySound}
               isImagePickerVisible={isImagePickerVisible}
               setImagePickerVisible={setImagePickerVisible}
               window={window}
             />
-            <View style={{flex:1}}>
+            <View style={{flex:1, alignItems:"center", justifyContent:"center"}}>
             {isImagePickerVisible && (
               <>
                 <MyImagePicker
+                  window={window}
+                  setPlaySound={setPlaySound}
                   imageSource={imageSource}
                   setImageSource={setImageSource}
                   styleSwitch={styleSwitch}
@@ -254,17 +291,30 @@ export default function App() {
                   settingSwitch={settingSwitch}
                   setSettingSwitch={setSettingSwitch}
                 />
-                <Pressable
-                  onPress={() => {
-                    swapImage();
-                  }}
-                  style={styles.swapButtonColumn}
-                >
-                  <Image
-                    source={circleImage}
-                    style={styles.changeButton}
-                  />
-                </Pressable>
+                 <Pressable
+              onPress={() => {
+                swapImage();
+                setPlaySound("swoosh");
+              }}
+              style={({ pressed }) => [
+                styles.swapButtonColumn,
+                {
+                  width: pressed ? 55 : 60,
+                  height: pressed ? 55 : 60,
+                
+                },
+              ]}
+            >
+              {({ pressed }) => (
+                <Image
+                  source={pressed ? rotatedCircle : circleImage}
+                  style={[
+                    styles.changeButton,
+                    pressed ? { width: 55, height: 55 } : { width: 60, height: 60 },
+                  ]}
+                />
+              )}
+            </Pressable>
               </>
             )}
             </View>

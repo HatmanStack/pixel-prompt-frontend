@@ -7,16 +7,13 @@ export default function DropDownComponent({
   
 }) {
     const [placeholderModelID, setPlaceholderModelID] = useState("Model ID");
-  
-
- 
       const data = [
         {
-          label: "Stable Diffusion",
+          label: "Stable Diffusion XL",
           value: "stabilityai/stable-diffusion-xl-base-1.0",
         },
         {
-          label: "Step Aware",
+          label: "SPO Diffusion XL",
           value: "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep",
         },
         
@@ -71,7 +68,7 @@ const styles = StyleSheet.create({
   dropdown: {
     margin: 16,
     height: 50,
-    width: 300,
+    width: 340,
     borderBottomColor: colors.borderBottomColor,
     borderBottomWidth: 3,
   },

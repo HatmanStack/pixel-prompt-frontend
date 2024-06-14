@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { Pressable, Image, View, StyleSheet, Text, Switch, FlatList } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
+const addImage = require("../assets/add_image.png");
+const coloredDelete = require("../assets/delete_colored.png");
+const deleteButton = require("../assets/delete.png");
+
 const MyImagePicker = ({
+  window,
+  setPlaySound,
   imageSource,
   setImageSource,
   styleSwitch,
@@ -11,6 +17,7 @@ const MyImagePicker = ({
   setSettingSwitch,
 }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [deletePressedImage, setDeletePressedImage] = useState(deleteButton);
 
   const selectImage = async (index) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -37,18 +44,21 @@ const MyImagePicker = ({
 
   const styleSwitchFunction = () => {
     setStyleSwitch(!styleSwitch);
+    setPlaySound("switch")
   };
 
   const settingSwitchFunction = () => {
     setSettingSwitch(!settingSwitch);
+    setPlaySound("switch")
   };
 
   const deleteFromImageArray = (index) => {
     setImageSource(prevImageSource => {
+        setPlaySound("click")
         if (prevImageSource.length > 1) {
             return prevImageSource.filter((_, i) => i !== index);
         }
-        return prevImageSource;
+        return [addImage];
     });
 };
 
@@ -91,16 +101,18 @@ const MyImagePicker = ({
             value={settingSwitch}
           />
         </View>
-      </View>    
+      </View>  
+      <View style={styles.flatListContainer}>  
     <FlatList
         data={imageSource}
-        numColumns={3}
+        numColumns={window.width < 1000 ? 1 : 3}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item: source, index }) => (
           <View style={[styles.imageColumnContainer, {height: selectedImageIndex === index ? 400 : 200}]}>
             <View style={[styles.columnContainer,]}>
           <Pressable
               onPress={() => {
+                  setPlaySound("click")
                   if(selectedImageIndex === index) {
                       setSelectedImageIndex(null);
                       return;
@@ -132,16 +144,17 @@ const MyImagePicker = ({
           >
            {({ pressed }) => (
               <Image
-                  source={pressed ? require("../assets/delete_colored.png") : require("../assets/delete.png")}
+                  source={pressed ? coloredDelete : deleteButton}
                   style={[ styles.changeButton]}
               />)}
           </Pressable>       
-          <Pressable style={[styles.selectButton]} onPress={() => selectImage(index)}>
+          <Pressable style={[styles.selectButton]} onPress={() =>{setPlaySound("click"); selectImage(index)}}>
               <Text style={styles.promptText}>Select</Text>
           </Pressable>
       </View>
         )}
       />
+      </View>
     </>
   );
 };
@@ -153,6 +166,10 @@ const colors = {
 };
 
 const styles = StyleSheet.create({
+  flatListContainer: {
+    width: 'auto', 
+    height: 'auto', 
+  },
   image: {
     marginTop: 20,
   },

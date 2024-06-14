@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 
-export default function PromptInputComponent({ setPrompt, inferredPrompt }) {
+export default function PromptInputComponent({ setPlaySound, setPrompt, inferredPrompt }) {
   const [text, setText] = React.useState("");
   const { width } = useWindowDimensions();
 
@@ -43,19 +43,21 @@ export default function PromptInputComponent({ setPrompt, inferredPrompt }) {
       <Pressable
         style={({ pressed }) => [
           {
-            height: pressed ? 25 : 30,
-            width: pressed ? 25 : 30,
+            height: 30,
+            width: 30,
             backgroundColor: pressed ? "#B58392" : "#3a3c3f",
             borderRadius: 6,
             padding: 10,
             marginTop: 10,
             alignItems: "center",
             justifyContent: "center",
+            zIndex: 1,
           },
         ]}
         onPress={() => {
           setText("");
           setPrompt("");
+          setPlaySound("click");
         }}
       >
         <Image
