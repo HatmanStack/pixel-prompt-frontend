@@ -8,7 +8,6 @@ const Inference = ({
   parameters,
   modelID,
   prompt,
-  isImagePickerVisible,
   styleSwitch,
   settingSwitch,
   guidance,
@@ -109,7 +108,7 @@ const Inference = ({
     if (inferrenceButton) {
       console.log(parameters);
       setActivity(true);
-      if (ModelID.includes('pix2pix')) {  //  Check for timeline on IP Adapater inference API
+      if (modelID.includes('pix2pix')) {  //  Check for timeline on IP Adapater inference API
         setModelMessage("Inference API img2img NotAvailable");
         setActivity(false);
         setModelError(true);
@@ -117,7 +116,7 @@ const Inference = ({
         // getBase64Image();
       } else {
         const ipScaleHolder = { key1: { key2: [0.0, 0.0] } };
-        fetch("http://localhost:8085/api", {                          // Change this to your API endpoint and use a library                                         
+        fetch("/api", {                          // Change this to your API endpoint and use a library                                         
           method: "POST",                       // Axios if not running in the same container
           headers: {                            // http://localhost:8085/api if running locally or w/e port your server is using or
              "Content-Type": "application/json", // /api if running in a container

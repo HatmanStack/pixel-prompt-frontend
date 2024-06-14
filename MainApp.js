@@ -47,12 +47,12 @@ export default function App() {
   const [inferrenceButton, setInferrenceButton] = useState(null);
   const [flanPrompt, setFlanPrompt] = useState(null);
   const [comboButtonPressed, setComboButtonPressed] = useState(false);
-  const window = useWindowDimensions();
-
   const [isImagePickerVisible, setImagePickerVisible] = useState(false);
   const [imageSource, setImageSource] = useState([assetImage]);
   const [settingSwitch, setSettingSwitch] = useState(false);
   const [styleSwitch, setStyleSwitch] = useState(false);
+  const window = useWindowDimensions();
+  const circleImage = require("./assets/circle.png");
 
   const passModelIDWrapper = (x) => {
     setModelError(false);
@@ -104,7 +104,6 @@ export default function App() {
         parameters={parameters}
         modelID={modelID}
         prompt={prompt}
-        isImagePickerVisible={isImagePickerVisible}
         styleSwitch={styleSwitch}
         settingSwitch={settingSwitch}
         guidance={guidance}
@@ -137,7 +136,7 @@ export default function App() {
                 ]}
               >
                 <Image
-                  source={require("./assets/circle.png")}
+                  source={circleImage}
                   style={styles.changeButton}
                 />
               </Pressable>
@@ -176,7 +175,7 @@ export default function App() {
                 </View>
               </View>
 
-              <View >
+              
                 <Expand
                   isImagePickerVisible={isImagePickerVisible}
                   setImagePickerVisible={setImagePickerVisible}
@@ -196,7 +195,7 @@ export default function App() {
                   setSteps={setSteps}
                   setGuidance={setGuidance}
                 />
-              </View>
+              
             </View>
             <View style={styles.rightColumnContainer}>
               {inferredImage && (
@@ -244,6 +243,7 @@ export default function App() {
               setImagePickerVisible={setImagePickerVisible}
               window={window}
             />
+            <View style={{flex:1}}>
             {isImagePickerVisible && (
               <>
                 <MyImagePicker
@@ -261,12 +261,13 @@ export default function App() {
                   style={styles.swapButtonColumn}
                 >
                   <Image
-                    source={require("./assets/circle.png")}
+                    source={circleImage}
                     style={styles.changeButton}
                   />
                 </Pressable>
               </>
             )}
+            </View>
             <SliderComponent setSteps={setSteps} setGuidance={setGuidance} />
             {inferredImage && (
               <Image
@@ -380,6 +381,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundColor,
     marginTop: 50,
     padding: 5,
+    
   },
   imageStyle: {
     width: 320,

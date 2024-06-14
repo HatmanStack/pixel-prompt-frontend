@@ -12,7 +12,7 @@ const MyImagePicker = ({
 }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
 
-  const selectImage = async () => {
+  const selectImage = async (index) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       alert("Sorry, we need media library permissions to select an image.");
@@ -27,7 +27,11 @@ const MyImagePicker = ({
     });
 
     if (!result.cancelled) {
-      setImageSource(prevImageSource => [...prevImageSource, result.assets[0].uri]);
+      setImageSource(prevImageSource => {
+        const newImageSource = [...prevImageSource];
+        newImageSource[index] = result.assets[0].uri;
+        return newImageSource;
+      });
     }
   };
 
@@ -49,60 +53,62 @@ const MyImagePicker = ({
 };
 
   return (
-    <>
-      <View style={styles.container}>
-            <View style={styles.rowContainer}>
-              <View style={styles.columnContainer}>
-                <Text
-                  style={[
-                    { color: styleSwitch ? "#9DA58D" : "#FFFFFF" },
-                    styles.sliderText,
-                  ]}
-                >
-                  Style
-                </Text>
-                <Switch
-                  trackColor={{ false: "#9DA58D", true: "#767577" }}
-                  thumbColor="#B58392"
-                  activeThumbColor="#6750A4"
-                  ios_backgroundColor="#3e3e3e"
-                  onValueChange={styleSwitchFunction}
-                  value={styleSwitch}
-                />
-              </View>
-              <View style={styles.columnContainer}>
-                <Text
-                  style={[
-                    { color: settingSwitch ? "#9FA8DA" : "#FFFFFF" },
-                    styles.sliderText,
-                  ]}
-                >
-                  Layout
-                </Text>
-                <Switch
-                  trackColor={{ false: "#958DA5", true: "#767577" }}
-                  thumbColor="#B58392"
-                  activeThumbColor="#6750A4"
-                  ios_backgroundColor="#3e3e3e"
-                  onValueChange={settingSwitchFunction}
-                  value={settingSwitch}
-                />
-              </View>
-            </View>
-      
+    <>    
+      <View style={styles.switchesRowContainer}>
+        <View style={styles.columnContainer}>
+          <Text
+            style={[
+              { color: styleSwitch ? "#9DA58D" : "#FFFFFF" },
+              styles.sliderText,
+            ]}
+          >
+            Style
+          </Text>
+          <Switch
+            trackColor={{ false: "#9DA58D", true: "#767577" }}
+            thumbColor="#B58392"
+            activeThumbColor="#6750A4"
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={styleSwitchFunction}
+            value={styleSwitch}
+          />
         </View>
-        
+        <View style={styles.columnContainer}>
+          <Text
+            style={[
+              { color: settingSwitch ? "#9FA8DA" : "#FFFFFF" },
+              styles.sliderText,
+            ]}
+          >
+            Layout
+          </Text>
+          <Switch
+            trackColor={{ false: "#958DA5", true: "#767577" }}
+            thumbColor="#B58392"
+            activeThumbColor="#6750A4"
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={settingSwitchFunction}
+            value={settingSwitch}
+          />
+        </View>
+      </View>    
     <FlatList
         data={imageSource}
         numColumns={3}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item: source, index }) => (
-          <View style={styles.columnContainer}>
+          <View style={[styles.imageColumnContainer, {height: selectedImageIndex === index ? 400 : 200}]}>
+            <View style={[styles.columnContainer,]}>
           <Pressable
               onPress={() => {
+                  if(selectedImageIndex === index) {
+                      setSelectedImageIndex(null);
+                      return;
+                  }
                   setSelectedImageIndex(index);
+                  
               }}
-              style={{position: "absolute", top: 0, right: 0}} 
+              style={{flex: 1, alignItems: "center", justifyContent: "center"}} 
           >
               <Image
                   source={
@@ -111,11 +117,13 @@ const MyImagePicker = ({
                   style={[
                       styles.image,
                       {width: selectedImageIndex === index ? 400 : 150, height: selectedImageIndex === index ? 400 : 150,
-                        margin: 10
+                        margin: 10,
+                        
                       }
                   ]}
               />
           </Pressable>
+          </View>
           <Pressable
               onPress={() => {
                   deleteFromImageArray(index);
@@ -128,14 +136,12 @@ const MyImagePicker = ({
                   style={[ styles.changeButton]}
               />)}
           </Pressable>       
-          <Pressable style={styles.selectButton} onPress={selectImage}>
+          <Pressable style={[styles.selectButton]} onPress={() => selectImage(index)}>
               <Text style={styles.promptText}>Select</Text>
           </Pressable>
       </View>
         )}
       />
-    
-    
     </>
   );
 };
@@ -147,23 +153,23 @@ const colors = {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   image: {
-    width: 200,
-    height: 200,
     marginTop: 20,
   },
-  rowContainer: {
+  switchesRowContainer: {
     backgroundColor: colors.backgroundColor,
     alignItems: "center",
-    flex: 1,
-    width: "100%",
-    height: "100%",
+    justifyContent: "center",
+    width: 300,
+    height: 50,
+    marginBottom: 20,
     flexDirection: "row",
+    overflow: "auto",
+  },
+  imageColumnContainer: {
+    height: 200,
+    alignItems: "center",
+    flexDirection: "column",
     overflow: "auto",
   },
   columnContainer: {
@@ -172,7 +178,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   selectButton: {
-    margin: 20,
+    margin: 0,
     borderRadius: 4,
     paddingHorizontal: 32,
     elevation: 3,
