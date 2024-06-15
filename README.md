@@ -71,6 +71,7 @@ The app will be running locally at http://localhost:19006. For different environ
 
 - **mistralai/Mistral-7B-Instruct-v0.3**
 - **roborovski/superprompt-v1**
+- **google/gemma-1.1-7b-it**
 
 ## Functionality
 

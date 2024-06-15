@@ -6,7 +6,7 @@ const swoosh = require('../assets/swoosh.mp3');
 const switchSound = require('../assets/switch.wav');
 const expand = require('../assets/expand.wav');
 
-const SoundPlayer = ({ playSound, makeSound}) => {
+const SoundPlayer = ({ makeSound}) => {
   const soundRef = useRef();
 
   useEffect(() => {
@@ -19,9 +19,9 @@ const SoundPlayer = ({ playSound, makeSound}) => {
   }, []);
 
   useEffect(() => {
-    if (playSound) {
+    if (makeSound) {
       let soundFile;
-      switch (playSound) {
+      switch (makeSound[0]) {
         case 'click':
           soundFile = click;
           break;
@@ -37,7 +37,7 @@ const SoundPlayer = ({ playSound, makeSound}) => {
         default:
           return;
       }
-    console.log('playsound')
+    
       // Unload the previous sound if it's still loaded
       if (soundRef.current) {
         soundRef.current.unloadAsync();

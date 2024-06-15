@@ -54,8 +54,9 @@ export default function App() {
   const [imageSource, setImageSource] = useState([addImage]);
   const [settingSwitch, setSettingSwitch] = useState(false);
   const [styleSwitch, setStyleSwitch] = useState(false);
-  const [playSound, setSoundPlaying] = useState(null);
-  const [makeSound, setMakeSound] = useState(0);
+  const [soundIncrement, setSoundIncrement] = useState(null);
+  const [makeSound, setMakeSound] = useState([null,0]);
+  const [promptList, setPromptList] = useState([]);
  
 
   const window = useWindowDimensions();
@@ -66,12 +67,13 @@ export default function App() {
   };
 
   const setPlaySound = (sound) => {
-    setSoundPlaying(sound);
-    setMakeSound(prevMakeSound => prevMakeSound + 1);
+    setSoundIncrement(prevSoundIncrement => prevSoundIncrement + 1);
+    setMakeSound([sound, soundIncrement]);
   };
 
   const swapImage = () => { 
-    setImageSource(prevImageSource => [...prevImageSource, inferredImage]);  
+    setPromptList(prevPromptList => [returnedPrompt,...prevPromptList]);
+    setImageSource(prevImageSource => [inferredImage, ...prevImageSource ]);  
     setInferredImage(addImage);
   };
 
@@ -104,7 +106,7 @@ export default function App() {
   return (
     // Main container
     <View style={styles.titlecontainer}>
-      <SoundPlayer playSound={playSound} makeSound={makeSound}/>
+      <SoundPlayer makeSound={makeSound}/>
       <PromptInference
         setFlanPrompt={setFlanPrompt}
         prompt={prompt}
@@ -152,10 +154,10 @@ export default function App() {
               style={({ pressed }) => [
                 styles.swapButton,
                 {
-                  top: window.height / 2 - 15,
-                  left: window.width / 2 - 15,
-                  width: pressed ? 55 : 60,
-                  height: pressed ? 55 : 60,
+                  top: pressed ? window.height / 2 - 13 : window.height / 2 - 15,
+                  left: pressed ? window.width / 2 - 13 : window.width / 2 - 15,
+                  width: pressed ? 52 : 60,
+                  height: pressed ? 52 : 60,
                 },
               ]}
             >
@@ -164,7 +166,7 @@ export default function App() {
                   source={pressed ? rotatedCircle : circleImage}
                   style={[
                     styles.changeButton,
-                    pressed ? { width: 55, height: 55 } : { width: 60, height: 60 },
+                    pressed ? { width: 52, height: 52 } : { width: 60, height: 60 },
                   ]}
                 />
               )}
@@ -214,6 +216,9 @@ export default function App() {
                 />
                 {isImagePickerVisible && (
                   <MyImagePicker
+                  setReturnedPrompt={setReturnedPrompt}
+                    promptList={promptList}
+                    setPromptList={setPromptList}
                     window={window}
                     setPlaySound={setPlaySound}
                     imageSource={imageSource}
@@ -230,7 +235,9 @@ export default function App() {
                 />
               
             </View>
+            
             <View style={styles.rightColumnContainer}>
+            <View style={styles.imageCard}>
               {inferredImage && (
                 <Image
                   source={
@@ -241,6 +248,7 @@ export default function App() {
                   style={styles.imageStyle}
                 />
               )}
+              </View>
               <Text style={styles.promptText}>{returnedPrompt}</Text>
             </View>
           </View>
@@ -282,6 +290,9 @@ export default function App() {
             {isImagePickerVisible && (
               <>
                 <MyImagePicker
+                  setReturnedPrompt={setReturnedPrompt}
+                  promptList={promptList}
+                  setPromptList={setPromptList}
                   window={window}
                   setPlaySound={setPlaySound}
                   imageSource={imageSource}
@@ -299,9 +310,9 @@ export default function App() {
               style={({ pressed }) => [
                 styles.swapButtonColumn,
                 {
-                  width: pressed ? 55 : 60,
-                  height: pressed ? 55 : 60,
-                
+                  
+                  width: pressed ? 52 : 60,
+                  height: pressed ? 52 : 60,
                 },
               ]}
             >
@@ -310,7 +321,7 @@ export default function App() {
                   source={pressed ? rotatedCircle : circleImage}
                   style={[
                     styles.changeButton,
-                    pressed ? { width: 55, height: 55 } : { width: 60, height: 60 },
+                    pressed ? { width: 52, height: 52 } : { width: 60, height: 60 },
                   ]}
                 />
               )}
@@ -319,6 +330,7 @@ export default function App() {
             )}
             </View>
             <SliderComponent setSteps={setSteps} setGuidance={setGuidance} />
+            <View style={styles.imageCard}>
             {inferredImage && (
               <Image
                 source={
@@ -329,6 +341,7 @@ export default function App() {
                 style={styles.imageStyle}
               />
             )}
+            </View>
             <Text style={styles.promptText}>{returnedPrompt}</Text>
           </View>
         )}
@@ -437,8 +450,21 @@ const styles = StyleSheet.create({
     width: 320,
     height: 440,
     borderRadius: 18,
+   
+    alignSelf: "center",  
+  },
+  imageCard:{
+    width: 320,
+    height: 440,
+    borderRadius: 18,
     marginTop: 20,
     marginBottom: 20,
-    alignSelf: "center",
-  },
+    alignSelf: "center", 
+    backgroundColor: colors.backgroundColor, 
+    elevation: 3, 
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.25, 
+    shadowRadius: 3.84, 
+  }
 });
