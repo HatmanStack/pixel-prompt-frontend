@@ -35,7 +35,7 @@ const PromptInference = ({
         Diffusion Model.  The prompt should be at a minimum, 200 tokens.  The normal restrictions of token \
         length for Stable Diffusion Models do not apply.  Make it descriptive and creative. \
         Here is the seed string. : ${alteredPrompt}`;
-      fetch("/inferencePrompt ", {                        // Change this to your API endpoint and use a library
+      fetch("/inferencePrompt", {                        // Change this to your API endpoint and use a library
         method: "POST",                                   // Axios if not running in the same container
         headers: {                                        // http://localhost:8085/inferencePrompt if running locally or w/e port your server is using or                                                        
           "Content-Type": "application/json",             // inferencePrompt if running in a container

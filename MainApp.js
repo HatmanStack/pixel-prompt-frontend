@@ -43,6 +43,7 @@ export default function App() {
   const [activity, setActivity] = useState(false);
   const [modelError, setModelError] = useState(false);
   const [returnedPrompt, setReturnedPrompt] = useState("Avacado Armchair")
+  const [initialReturnedPrompt, setInitialReturnedPrompt] = useState('Avacado Armchair')
   const [textInference, setTextInference] = useState(false);
   const [shortPrompt, setShortPrompt] = useState("");
   const [longPrompt, setLongPrompt] = useState(null);
@@ -57,6 +58,7 @@ export default function App() {
   const [soundIncrement, setSoundIncrement] = useState(null);
   const [makeSound, setMakeSound] = useState([null,0]);
   const [promptList, setPromptList] = useState([]);
+  const [swapImage, setSwapImage] = useState(false);
  
 
   const window = useWindowDimensions();
@@ -71,18 +73,20 @@ export default function App() {
     setMakeSound([sound, soundIncrement]);
   };
 
-  const swapImage = () => { 
-    setPromptList(prevPromptList => [returnedPrompt,...prevPromptList]);
+  useEffect(() => {
+    if(swapImage){
+    if(inferredImage !== addImage){
+    setPromptList(prevPromptList => [initialReturnedPrompt,...prevPromptList]);
     setImageSource(prevImageSource => [inferredImage, ...prevImageSource ]);  
     setInferredImage(addImage);
-  };
-
-  useEffect(() => {
-    if (imageSource.length > 1 && imageSource.includes(addImage)) {
-      const newImageSource = imageSource.filter((image) => image !== addImage);
-      setImageSource(newImageSource);
+    setInitialReturnedPrompt("");
+    setReturnedPrompt('')
     }
-  }, [imageSource]);
+    setSwapImage(false);
+  }
+  }),[swapImage];
+
+
 
   const switchPromptFunction = () => {
     setPromptLengthValue(!promptLengthValue);
@@ -134,6 +138,7 @@ export default function App() {
         setActivity={setActivity}
         setModelError={setModelError}
         setReturnedPrompt={setReturnedPrompt}
+        setInitialReturnedPrompt={setInitialReturnedPrompt}
         setInferredImage={setInferredImage}
       />
       <BreathingComponent />
@@ -148,7 +153,7 @@ export default function App() {
             {isImagePickerVisible && (
               <Pressable
               onPress={() => {
-                swapImage();
+                setSwapImage(true);
                 setPlaySound("swoosh");
               }}
               style={({ pressed }) => [
@@ -216,7 +221,8 @@ export default function App() {
                 />
                 {isImagePickerVisible && (
                   <MyImagePicker
-                  setReturnedPrompt={setReturnedPrompt}
+                    initialReturnedPrompt={initialReturnedPrompt}
+                    setReturnedPrompt={setReturnedPrompt}
                     promptList={promptList}
                     setPromptList={setPromptList}
                     window={window}
@@ -290,6 +296,7 @@ export default function App() {
             {isImagePickerVisible && (
               <>
                 <MyImagePicker
+                  initialReturnedPrompt={initialReturnedPrompt}
                   setReturnedPrompt={setReturnedPrompt}
                   promptList={promptList}
                   setPromptList={setPromptList}
@@ -304,7 +311,7 @@ export default function App() {
                 />
                  <Pressable
               onPress={() => {
-                swapImage();
+                setSwapImage(true);
                 setPlaySound("swoosh");
               }}
               style={({ pressed }) => [

@@ -7,6 +7,7 @@ const coloredDelete = require("../assets/delete_colored.png");
 const deleteButton = require("../assets/delete.png");
 
 const MyImagePicker = ({
+  initialReturnedPrompt,
   setReturnedPrompt,
   promptList,
   setPromptList,
@@ -20,7 +21,18 @@ const MyImagePicker = ({
   setSettingSwitch,
 }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
-  
+  const [textHeight, setTextHeight] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(160);
+
+  useEffect(() => {
+    if(window.width < 1000) {
+    if (selectedImageIndex !== null) {
+      setContainerHeight(440 + textHeight);
+    } else {
+      setContainerHeight(160);
+    }
+  }
+  }, [selectedImageIndex, textHeight]);
 
   const selectImage = async (index) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -40,6 +52,7 @@ const MyImagePicker = ({
       setImageSource(prevImageSource => {
         const newImageSource = [...prevImageSource];
         newImageSource[index] = result.assets[0].uri;
+        newImageSource[index + 1] = addImage;
         return newImageSource;
       });
       setPromptList(prevPromptSource => {
@@ -50,9 +63,13 @@ const MyImagePicker = ({
     }
   };
 
+  
+
   useEffect(() => {
     if (selectedImageIndex !== null) {
       setReturnedPrompt(promptList[selectedImageIndex]);
+    }else {
+      setReturnedPrompt(initialReturnedPrompt);
     }
   }, [selectedImageIndex]);
 
@@ -74,12 +91,14 @@ const MyImagePicker = ({
         }
         return [addImage];
     });
+    setReturnedPrompt(promptList[index+1]);
     setPromptList(prevPromptSource => {
       if (prevPromptSource.length > 1) {
           return prevPromptSource.filter((_, i) => i !== index);
       }
       return [""];
   });
+    
 };
 
   return (
@@ -129,7 +148,7 @@ const MyImagePicker = ({
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item: source, index }) => (
           <View style={[styles.imageColumnContainer, {width: selectedImageIndex === index ? 330 : 160,
-                        height: selectedImageIndex === index ? 440 : 160}]}>
+                        height: window.width < 1000 && selectedImageIndex == index ? containerHeight : selectedImageIndex === index ? 440 : 160}]}>
             <View style={[styles.columnContainer,]}>
           <Pressable
               onPress={() => {
@@ -161,6 +180,7 @@ const MyImagePicker = ({
               />
           </Pressable>
           </View>
+          {index !== imageSource.length - 1  &&  
           <Pressable
               onPress={() => {
                   deleteFromImageArray(index);
@@ -172,10 +192,20 @@ const MyImagePicker = ({
                   source={pressed ? coloredDelete : deleteButton}
                   style={[ styles.changeButton]}
               />)}
-          </Pressable>       
+          </Pressable> }
+          {window.width < 1000 && selectedImageIndex === index && index !== imageSource.length - 1 &&
+          <Text style={[styles.promptText, {flexShrink: 1}]} numberOfLines={1000}
+          onLayout={(event) => {
+            const {height} = event.nativeEvent.layout;
+            setTextHeight(height);
+          }}
+          >
+            {promptList[index]}</Text>
+          } 
+          {index === imageSource.length - 1  &&   
           <Pressable style={[styles.selectButton]} onPress={() =>{setPlaySound("click"); selectImage(index)}}>
               <Text style={styles.promptText}>Select</Text>
-          </Pressable>
+          </Pressable>}
       </View>
         )}
       />

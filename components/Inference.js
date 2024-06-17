@@ -15,6 +15,7 @@ const Inference = ({
   setActivity,
   setModelError,
   setReturnedPrompt,
+  setInitialReturnedPrompt,
   setInferredImage,
 }) => {
   const [encodedImage, setEncodedImage] = useState("");
@@ -89,6 +90,7 @@ const Inference = ({
           setActivity(false);
           setInferrenceButton(false);
           setReturnedPrompt(prompt);
+          setInitialReturnedPrompt(prompt);
           setEncodedImage(null);
           setInferredImage("data:image/png;base64," + responseData.output);
         })
@@ -137,6 +139,8 @@ const Inference = ({
               setActivity(false);
               setModelError(true);
               setInferrenceButton(false);
+            }else {
+              setInitialReturnedPrompt(prompt);
             }
             setInferrenceButton(false);
             setActivity(false);
