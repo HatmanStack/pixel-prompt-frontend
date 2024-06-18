@@ -73,7 +73,7 @@ const Inference = ({
       console.log(scaledIP);
       fetch("/img2img", {                 // Change this to your API endpoint and use a library                 
         method: "POST",                   // Axios if not running in the same container
-        headers: {                        // http://localhost:8085/api if running locally or w/e port your server is using or
+        headers: {                        // http://localhost:8085/img2img if running locally or w/e port your server is using or
           "Content-Type": "application/json", // /api if running in a container
         },
         body: JSON.stringify({

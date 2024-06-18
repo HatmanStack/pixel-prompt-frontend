@@ -32,10 +32,10 @@ const rotatedCircle = require("./assets/rotated_circle.png");
 export default function App() {
   useFonts({ Sigmar: require("./assets/Sigmar/Sigmar-Regular.ttf") });
   const [inferredImage, setInferredImage] = useState(assetImage);
-  const [steps, setSteps] = useState(30);
-  const [guidance, setGuidance] = useState(7);
+  const [steps, setSteps] = useState(28);
+  const [guidance, setGuidance] = useState(5);
   const [modelID, setModelID] = useState(
-    "stabilityai/stable-diffusion-xl-base-1.0"
+    "stabilityai/stable-diffusion-3-medium"
   );
   const [prompt, setPrompt] = useState("Avocado Armchair");
   const [inferredPrompt, setInferredPrompt] = useState(null);

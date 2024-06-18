@@ -8,6 +8,11 @@ export default function DropDownComponent({
 }) {
     const [placeholderModelID, setPlaceholderModelID] = useState("Model ID");
       const data = [
+        
+        {
+          label: "Stable Diffusion 3",
+          value: "stabilityai/stable-diffusion-3-medium",
+        },
         {
           label: "Stable Diffusion XL",
           value: "stabilityai/stable-diffusion-xl-base-1.0",

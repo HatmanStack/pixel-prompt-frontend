@@ -37,16 +37,22 @@ const SoundPlayer = ({ makeSound}) => {
         default:
           return;
       }
-    
-      // Unload the previous sound if it's still loaded
-      if (soundRef.current) {
-        soundRef.current.unloadAsync();
-      }
 
+      if (soundRef.current) {
+        soundRef.current.unloadAsync().then(() => {
+        }).catch((error) => {
+          console.log('Failed to unload the sound', error);
+        });
+      }
+      
       const loadAndPlaySound = async () => {
-        const { sound } = await Audio.Sound.createAsync(soundFile);
-        soundRef.current = sound;
-        await soundRef.current.playAsync();
+        try {
+          const { sound } = await Audio.Sound.createAsync(soundFile);
+          soundRef.current = sound;
+          await soundRef.current.playAsync();
+        } catch (error) {
+          console.log('Failed to load and play the sound', error);
+        }
       };
 
       loadAndPlaySound().catch((error) => {
@@ -55,7 +61,7 @@ const SoundPlayer = ({ makeSound}) => {
     }
   }, [makeSound]);
 
-  return null;
+  
 };
 
 export default SoundPlayer;
