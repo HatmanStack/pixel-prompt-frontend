@@ -59,6 +59,7 @@ export default function App() {
   const [makeSound, setMakeSound] = useState([null,0]);
   const [promptList, setPromptList] = useState([]);
   const [swapImage, setSwapImage] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
  
 
   const window = useWindowDimensions();
@@ -124,6 +125,7 @@ export default function App() {
         setModelError={setModelError}
       />
       <Inference
+        selectedImageIndex={selectedImageIndex}
         setInferrenceButton={setInferrenceButton}
         inferrenceButton={inferrenceButton}
         setModelMessage={setModelMessage}
@@ -221,6 +223,8 @@ export default function App() {
                 />
                 {isImagePickerVisible && (
                   <MyImagePicker
+                    selectedImageIndex={selectedImageIndex}
+                    setSelectedImageIndex={setSelectedImageIndex}
                     initialReturnedPrompt={initialReturnedPrompt}
                     setReturnedPrompt={setReturnedPrompt}
                     promptList={promptList}
@@ -296,6 +300,8 @@ export default function App() {
             {isImagePickerVisible && (
               <>
                 <MyImagePicker
+                  selectedImageIndex={selectedImageIndex}
+                  setSelectedImageIndex={setSelectedImageIndex}
                   initialReturnedPrompt={initialReturnedPrompt}
                   setReturnedPrompt={setReturnedPrompt}
                   promptList={promptList}

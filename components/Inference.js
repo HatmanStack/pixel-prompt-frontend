@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 const Inference = ({
+  selectedImageIndex,
   setInferrenceButton,
   inferrenceButton,
   setModelMessage,
@@ -110,6 +111,24 @@ const Inference = ({
     if (inferrenceButton) {
       console.log(parameters);
       setActivity(true);
+      let image = "test";
+      let inferreceModel = modelID;
+      let ipScaleHolder = {up: { block_0: [0.0, 1.0, 0.0] },};
+      if (styleSwitch || settingSwitch){
+        image = imageSource[selectedImageIndex];
+        inferreceModel = "gradiotxt2img";
+      if (settingSwitch) {
+        ipScaleHolder = {
+          down: { block_2: [0.0, 1.0] },
+        };
+      }
+      if (styleSwitch && settingSwitch) {
+        ipScaleHolder = {
+          down: { block_2: [0.0, 1.0] },
+          up: { block_0: [0.0, 1.0, 0.0] },
+        };
+      }
+      }
       if (modelID.includes('pix2pix')) {  //  Check for timeline on IP Adapater inference API
         setModelMessage("Inference API img2img NotAvailable");
         setActivity(false);
@@ -117,7 +136,7 @@ const Inference = ({
         setInferrenceButton(false);
         // getBase64Image();
       } else {
-        const ipScaleHolder = { key1: { key2: [0.0, 0.0] } };
+        
         fetch("/api", {                          // Change this to your API endpoint and use a library                                         
           method: "POST",                       // Axios if not running in the same container
           headers: {                            // http://localhost:8085/api if running locally or w/e port your server is using or
@@ -127,7 +146,7 @@ const Inference = ({
             prompt: prompt,
             steps: steps,
             guidance: guidance,
-            modelID: modelID,
+            modelID: inferreceModel,
             image: "test",                  // Holders Until File Upload Optional with FastAPI is fixed
             scale: ipScaleHolder,           // Holders Until File Upload Optional with FastAPI is fixed
           }),

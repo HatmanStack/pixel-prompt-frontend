@@ -7,6 +7,8 @@ const coloredDelete = require("../assets/delete_colored.png");
 const deleteButton = require("../assets/delete.png");
 
 const MyImagePicker = ({
+  selectedImageIndex,
+  setSelectedImageIndex,
   initialReturnedPrompt,
   setReturnedPrompt,
   promptList,
@@ -20,7 +22,7 @@ const MyImagePicker = ({
   settingSwitch,
   setSettingSwitch,
 }) => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  
   const [textHeight, setTextHeight] = useState(0);
   const [containerHeight, setContainerHeight] = useState(160);
 
