@@ -9,6 +9,7 @@ import {
   useWindowDimensions,
   Image,
   Switch,
+  Dimensions
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
@@ -60,6 +61,7 @@ export default function App() {
   const [promptList, setPromptList] = useState([]);
   const [swapImage, setSwapImage] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [columnCount, setColumnCount] = useState(3);
  
 
   const window = useWindowDimensions();
@@ -107,6 +109,24 @@ export default function App() {
   const setParametersWrapper = () => {
     setParameters(`${prompt}-${steps}-${guidance}-${modelID}`);
   };
+
+  const updateColumnCount = (width) => {
+    if (width < 600) setColumnCount(3);
+    else if (width >= 600 && width < 1000) setColumnCount(4);
+    else if (width >= 1000 && width < 1400) setColumnCount(5);
+    else if (width >= 1400 && width < 1700) setColumnCount(6);
+    else setColumnCount(7);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = Dimensions.get('window').width;
+      updateColumnCount(screenWidth);
+    };
+    handleResize();
+    Dimensions.addEventListener('change', handleResize);
+    return () => Dimensions.removeEventListener('change', handleResize);
+  }, []);
 
   return (
     // Main container
@@ -223,6 +243,7 @@ export default function App() {
                 />
                 {isImagePickerVisible && (
                   <MyImagePicker
+                    columnCount={columnCount}
                     selectedImageIndex={selectedImageIndex}
                     setSelectedImageIndex={setSelectedImageIndex}
                     initialReturnedPrompt={initialReturnedPrompt}
@@ -300,6 +321,7 @@ export default function App() {
             {isImagePickerVisible && (
               <>
                 <MyImagePicker
+                  columnCount={columnCount}
                   selectedImageIndex={selectedImageIndex}
                   setSelectedImageIndex={setSelectedImageIndex}
                   initialReturnedPrompt={initialReturnedPrompt}

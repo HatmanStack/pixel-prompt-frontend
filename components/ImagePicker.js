@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, Image, View, StyleSheet, Text, Switch, FlatList } from "react-native";
+import {
+  Pressable,
+  Image,
+  View,
+  StyleSheet,
+  Text,
+  Switch,
+  FlatList,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 const addImage = require("../assets/add_image.png");
@@ -7,6 +15,7 @@ const coloredDelete = require("../assets/delete_colored.png");
 const deleteButton = require("../assets/delete.png");
 
 const MyImagePicker = ({
+  columnCount,
   selectedImageIndex,
   setSelectedImageIndex,
   initialReturnedPrompt,
@@ -22,18 +31,17 @@ const MyImagePicker = ({
   settingSwitch,
   setSettingSwitch,
 }) => {
-  
   const [textHeight, setTextHeight] = useState(0);
   const [containerHeight, setContainerHeight] = useState(160);
 
   useEffect(() => {
-    if(window.width < 1000) {
-    if (selectedImageIndex !== null) {
-      setContainerHeight(440 + textHeight);
-    } else {
-      setContainerHeight(160);
+    if (window.width < 1000) {
+      if (selectedImageIndex !== null) {
+        setContainerHeight(440 + textHeight);
+      } else {
+        setContainerHeight(160);
+      }
     }
-  }
   }, [selectedImageIndex, textHeight]);
 
   const selectImage = async (index) => {
@@ -51,60 +59,64 @@ const MyImagePicker = ({
     });
 
     if (!result.cancelled) {
-      setImageSource(prevImageSource => {
+      setImageSource((prevImageSource) => {
         const newImageSource = [...prevImageSource];
         newImageSource[index] = result.assets[0].uri;
         newImageSource[index + 1] = addImage;
         return newImageSource;
       });
-      setPromptList(prevPromptSource => {
+      setPromptList((prevPromptSource) => {
         const prevPrompt = [...prevPromptSource];
-        prevPrompt[index] = 'Uploaded Image';
+        prevPrompt[index] = "Uploaded Image";
         return prevPrompt;
-    });
+      });
     }
   };
-
-  
 
   useEffect(() => {
     if (selectedImageIndex !== null) {
       setReturnedPrompt(promptList[selectedImageIndex]);
-    }else {
+    } else {
       setReturnedPrompt(initialReturnedPrompt);
     }
   }, [selectedImageIndex]);
 
   const styleSwitchFunction = () => {
     setStyleSwitch(!styleSwitch);
-    setPlaySound("switch")
+    setPlaySound("switch");
   };
 
   const settingSwitchFunction = () => {
     setSettingSwitch(!settingSwitch);
-    setPlaySound("switch")
+    setPlaySound("switch");
   };
 
   const deleteFromImageArray = (index) => {
-    setImageSource(prevImageSource => {
-        setPlaySound("click")
-        if (prevImageSource.length > 1) {
-            return prevImageSource.filter((_, i) => i !== index);
-        }
-        return [addImage];
+    setImageSource((prevImageSource) => {
+      setPlaySound("click");
+      if (prevImageSource.length > 1) {
+        return prevImageSource.filter((_, i) => i !== index);
+      }
+      return [addImage];
     });
-    setReturnedPrompt(promptList[index+1]);
-    setPromptList(prevPromptSource => {
+    setReturnedPrompt(promptList[index + 1]);
+    setPromptList((prevPromptSource) => {
       if (prevPromptSource.length > 1) {
-          return prevPromptSource.filter((_, i) => i !== index);
+        return prevPromptSource.filter((_, i) => i !== index);
       }
       return [""];
-  });
+    });
+  };
+
+  function isStartOrEndOfRow(index) {
+    const isLastInRow = (selectedImageIndex + 1) % columnCount === 0 || selectedImageIndex === imageSource.length - 1;
+    const isFirstInRow = selectedImageIndex % columnCount === 0;
     
-};
+    return selectedImageIndex === index + (isFirstInRow ? -1 : 1) || selectedImageIndex === index + (isFirstInRow ? -2 : isLastInRow ? 2 : -1);
+  }
 
   return (
-    <>    
+    <>
       <View style={styles.switchesRowContainer}>
         <View style={styles.columnContainer}>
           <Text
@@ -142,75 +154,113 @@ const MyImagePicker = ({
             value={settingSwitch}
           />
         </View>
-      </View>  
-      <View style={styles.flatListContainer}>  
-    <FlatList
-        data={imageSource}
-        numColumns={window.width < 1000 ? 2 : 3}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item: source, index }) => (
-          <View style={[styles.imageColumnContainer, {width: selectedImageIndex === index ? 330 : 160,
-                        height: window.width < 1000 && selectedImageIndex == index ? containerHeight : selectedImageIndex === index ? 440 : 160}]}>
-            <View style={[styles.columnContainer,]}>
-          <Pressable
-              onPress={() => {
-                  setPlaySound("click")
-                  if(selectedImageIndex === index) {
+      </View>
+      <View style={styles.flatListContainer}>
+        <FlatList
+          data={imageSource}
+          key={columnCount}
+          numColumns={columnCount}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item: source, index }) => (
+            <View
+              style={[
+                styles.imageColumnContainer,
+                {
+                  width: isStartOrEndOfRow(index) ? 0 : selectedImageIndex === index ? 330 : index === imageSource.length - 1 ? 160 : 105,
+                  height:
+                    window.width < 1000 && selectedImageIndex == index
+                      ? containerHeight
+                      : selectedImageIndex === index
+                        ? 440
+                        : index === imageSource.length - 1 ? 160 : 105,
+                        margin: 0,
+                  marginTop: selectedImageIndex === index ? 20 : 0,
+                  overflow: "visible"
+                },
+              ]}
+            >
+              <View style={[styles.columnContainer]}>
+                <Pressable
+                  onPress={() => {
+                    setPlaySound("click");
+                    if (selectedImageIndex === index) {
                       setSelectedImageIndex(null);
                       return;
-                  }
-                  setSelectedImageIndex(index);
-                  
-              }}
-              style={[styles.imageCard, { alignItems: "flex-start", justifyContent: "flex-start",
-              width: selectedImageIndex === index ? 320 : 100,
-              height: selectedImageIndex === index ? 400 : 110,
-              borderRadius: selectedImageIndex === index ? '10%' : '0%',}]} 
-          >
-              <Image
-                  source={
-                      typeof source === "number" ? source : { uri: source }
-                  }
+                    }
+                    setSelectedImageIndex(index);
+                  }}
                   style={[
-                     
-                      {
-                        width: selectedImageIndex === index ? 320 : 100,
-                        height: selectedImageIndex === index ? 400 : 110,
-                        borderRadius: selectedImageIndex === index ? '10%' : '0%',
-                      }
+                    styles.imageCard,
+                    {
+                      alignItems: "flex-start",
+                      justifyContent: "flex-start",
+                      width: isStartOrEndOfRow(index) ? 0 : selectedImageIndex === index ? 320 : 100,
+                      height: isStartOrEndOfRow(index) ? 0 : selectedImageIndex === index ? 400 : 100,
+                      borderRadius: selectedImageIndex === index ? 30 : 0,
+                    },
                   ]}
-              />
-          </Pressable>
-          </View>
-          {index !== imageSource.length - 1  &&  
-          <Pressable
-              onPress={() => {
-                  deleteFromImageArray(index);
-              }}
-              style={{position: "absolute", top: 0, right: selectedImageIndex === index ? 0 : 15}} 
-          >
-           {({ pressed }) => (
-              <Image
-                  source={pressed ? coloredDelete : deleteButton}
-                  style={[ styles.changeButton]}
-              />)}
-          </Pressable> }
-          {window.width < 1000 && selectedImageIndex === index && index !== imageSource.length - 1 &&
-          <Text style={[styles.promptText, {flexShrink: 1}]} numberOfLines={1000}
-          onLayout={(event) => {
-            const {height} = event.nativeEvent.layout;
-            setTextHeight(height);
-          }}
-          >
-            {promptList[index]}</Text>
-          } 
-          {index === imageSource.length - 1  &&   
-          <Pressable style={[styles.selectButton]} onPress={() =>{setPlaySound("click"); selectImage(index)}}>
-              <Text style={styles.promptText}>Select</Text>
-          </Pressable>}
-      </View>
-        )}
-      />
+                >
+                  <Image
+                    source={
+                      typeof source === "number" ? source : { uri: source }
+                    }
+                    style={[
+                      {
+                        width: isStartOrEndOfRow(index) ? 0 : selectedImageIndex === index ? 320 : 100,
+                        height: isStartOrEndOfRow(index) ? 0 : selectedImageIndex === index ? 400 : 100,
+                        borderRadius: selectedImageIndex === index ? 30 : 0,
+                      },
+                    ]}
+                  />
+                </Pressable>
+              </View>
+              { index !== imageSource.length - 1 && (selectedImageIndex === null || index !== selectedImageIndex + 1) && (
+                <Pressable
+                  onPress={() => {
+                    deleteFromImageArray(index);
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                  }}
+                >
+                  {({ pressed }) => (
+                    <Image
+                      source={pressed ? coloredDelete : deleteButton}
+                      style={[styles.changeButton]}
+                    />
+                  )}
+                </Pressable>
+              )}
+              {window.width < 1000 &&
+                selectedImageIndex === index &&
+                index !== imageSource.length - 1 && (
+                  <Text
+                    style={[styles.promptText, { flexShrink: 1 }]}
+                    numberOfLines={1000}
+                    onLayout={(event) => {
+                      const { height } = event.nativeEvent.layout;
+                      setTextHeight(height);
+                    }}
+                  >
+                    {promptList[index]}
+                  </Text>
+                )}
+              {index === imageSource.length - 1 && !selectedImageIndex && (
+                <Pressable
+                  style={[styles.selectButton]}
+                  onPress={() => {
+                    setPlaySound("click");
+                    selectImage(index);
+                  }}
+                >
+                  <Text style={styles.promptText}>Select</Text>
+                </Pressable>
+              )}
+            </View>
+          )}
+        />
       </View>
     </>
   );
@@ -224,8 +274,8 @@ const colors = {
 
 const styles = StyleSheet.create({
   flatListContainer: {
-    width: 'auto', 
-    height: 'auto', 
+    width: "auto",
+    height: "auto",
   },
   switchesRowContainer: {
     backgroundColor: colors.backgroundColor,
@@ -238,7 +288,6 @@ const styles = StyleSheet.create({
     overflow: "auto",
   },
   imageColumnContainer: {
-    marginTop: 10,
     alignItems: "center",
     flexDirection: "column",
     overflow: "auto",
@@ -274,18 +323,18 @@ const styles = StyleSheet.create({
     fontFamily: "Sigmar",
   },
   imageCard: {
-    backgroundColor: colors.buttonBackground, 
-    elevation: 3, 
+    backgroundColor: colors.buttonBackground,
+    elevation: 3,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.25, 
-    shadowRadius: 3.84, 
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   changeButton: {
     width: 20,
     height: 20,
     justifyContent: "center",
-    alignItems: "center", 
+    alignItems: "center",
   },
 });
 
