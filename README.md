@@ -2,11 +2,11 @@
 
 This is the frontend component of Pixel Prompt it's used in conjunction with the container and backend versions. This frontend serves as the user interface for interacting with the underlying ML models and backend services, providing a seamless and intuitive experience across multiple platforms.
 
-For more discussion about the architectures [Cloud Bound](https://medium.com/@HatmanStack/cloud-bound-react-native-and-fastapi-ml-684a658f967a).  
+A blog post talking about the architecture can be found here: [Cloud Bound](https://medium.com/@HatmanStack/cloud-bound-react-native-and-fastapi-ml-684a658f967a).  
 
 ## Preview :zap:
 
-To preview the application visit the hosted version on the Hugging Face Spaces platform [here](https://huggingface.co/spaces/Hatman/pixel-prompt).
+To preview the application visit the hosted version on the Hugging Face Spaces platform [here](https://hatman-pixel-prompt.hf.space).
 
 ## Screenshots
 

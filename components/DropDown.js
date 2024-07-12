@@ -22,7 +22,6 @@ export default function DropDownComponent({
           value: "SPO-Diffusion-Models/SPO-SDXL_4k-p_10ep",
         },
         
-        { label: "pix2pix", value: "timbrooks/instruct-pix2pix" },
         { label: "Voxel", value: "Fictiverse/Stable_Diffusion_VoxelArt_Model" },
         {
           label: "Paper Cut Out",
