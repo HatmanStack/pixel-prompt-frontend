@@ -71,8 +71,8 @@ The app will be running locally at http://localhost:19006. For different environ
 ### Prompts
 
 - **mistralai/Mistral-7B-Instruct-v0.3**
-- **roborovski/superprompt-v1**
-- **google/gemma-1.1-7b-it**
+- **Gustavosta/MagicPrompt-Stable-Diffusion**
+- **meta-llama/Meta-Llama-3-70B-Instruct**
 
 ## Functionality
 

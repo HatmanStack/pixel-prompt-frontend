@@ -35,7 +35,7 @@ const MyImagePicker = ({
   const [containerHeight, setContainerHeight] = useState(160);
 
   useEffect(() => {
-    if (window.width < 1000) {
+    if (window < 1000) {
       if (selectedImageIndex !== null) {
         setContainerHeight(440 + textHeight);
       } else {
@@ -111,7 +111,6 @@ const MyImagePicker = ({
   function isStartOrEndOfRow(index) {
     const isLastInRow = (selectedImageIndex + 1) % columnCount === 0 || selectedImageIndex === imageSource.length - 1;
     const isFirstInRow = selectedImageIndex % columnCount === 0;
-    
     return selectedImageIndex === index + (isFirstInRow ? -1 : 1) || selectedImageIndex === index + (isFirstInRow ? -2 : isLastInRow ? 2 : -1);
   }
 
@@ -168,7 +167,7 @@ const MyImagePicker = ({
                 {
                   width: isStartOrEndOfRow(index) ? 0 : selectedImageIndex === index ? 330 : index === imageSource.length - 1 ? 160 : 105,
                   height:
-                    window.width < 1000 && selectedImageIndex == index
+                    window < 1000 && selectedImageIndex == index
                       ? containerHeight
                       : selectedImageIndex === index
                         ? 440
@@ -214,7 +213,8 @@ const MyImagePicker = ({
                   />
                 </Pressable>
               </View>
-              { index !== imageSource.length - 1 && (selectedImageIndex === null || index !== selectedImageIndex + 1) && (
+              { index !== imageSource.length - 1 && (selectedImageIndex === null || index !== selectedImageIndex + 1) && 
+              (selectedImageIndex === null || (index - 2) % columnCount !== 0) && (
                 <Pressable
                   onPress={() => {
                     deleteFromImageArray(index);
@@ -233,7 +233,7 @@ const MyImagePicker = ({
                   )}
                 </Pressable>
               )}
-              {window.width < 1000 &&
+              {window < 1000 &&
                 selectedImageIndex === index &&
                 index !== imageSource.length - 1 && (
                   <Text
@@ -247,7 +247,8 @@ const MyImagePicker = ({
                     {promptList[index]}
                   </Text>
                 )}
-              {index === imageSource.length - 1 && !selectedImageIndex && (
+              {index === imageSource.length - 1 && !selectedImageIndex &&
+               (selectedImageIndex === null || index !== selectedImageIndex + 2) && (
                 <Pressable
                   style={[styles.selectButton]}
                   onPress={() => {

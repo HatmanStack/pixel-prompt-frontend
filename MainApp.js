@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {
-  ActivityIndicator,
   StyleSheet,
   View,
   ScrollView,
   Text,
   Pressable,
-  useWindowDimensions,
+  Dimensions,
   Image,
-  Switch,
-  Dimensions
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
@@ -64,7 +61,8 @@ export default function App() {
   const [columnCount, setColumnCount] = useState(3);
  
 
-  const window = useWindowDimensions();
+  const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
   
   const passModelIDWrapper = (x) => {
     setModelError(false);
@@ -120,8 +118,7 @@ export default function App() {
 
   useEffect(() => {
     const handleResize = () => {
-      const screenWidth = Dimensions.get('window').width;
-      updateColumnCount(screenWidth);
+      updateColumnCount(windowWidth);
     };
     handleResize();
     Dimensions.addEventListener('change', handleResize);
@@ -169,7 +166,7 @@ export default function App() {
         style={styles.ScrollView}
         showsVerticalScrollIndicator={false}
       >
-        {window.width > 1000 ? (
+        {windowWidth > 1000 ? (
           <View style={styles.rowContainer}>
             {/* Left column */}
             {isImagePickerVisible && (
@@ -181,8 +178,8 @@ export default function App() {
               style={({ pressed }) => [
                 styles.swapButton,
                 {
-                  top: pressed ? window.height / 2 - 13 : window.height / 2 - 15,
-                  left: pressed ? window.width / 2 - 13 : window.width / 2 - 15,
+                  top: pressed ? windowHeight / 2 - 13 : windowHeight / 2 - 15,
+                  left: pressed ? windowWidth / 2 - 13 : windowWidth / 2 - 15,
                   width: pressed ? 52 : 60,
                   height: pressed ? 52 : 60,
                 },
@@ -239,7 +236,7 @@ export default function App() {
                   setPlaySound={setPlaySound}
                   isImagePickerVisible={isImagePickerVisible}
                   setImagePickerVisible={setImagePickerVisible}
-                  window={window}
+                  window={windowWidth}
                 />
                 {isImagePickerVisible && (
                   <MyImagePicker
@@ -250,7 +247,7 @@ export default function App() {
                     setReturnedPrompt={setReturnedPrompt}
                     promptList={promptList}
                     setPromptList={setPromptList}
-                    window={window}
+                    window={windowWidth}
                     setPlaySound={setPlaySound}
                     imageSource={imageSource}
                     setImageSource={setImageSource}
@@ -315,7 +312,7 @@ export default function App() {
               setPlaySound={setPlaySound}
               isImagePickerVisible={isImagePickerVisible}
               setImagePickerVisible={setImagePickerVisible}
-              window={window}
+              window={windowWidth}
             />
             <View style={{flex:1, alignItems:"center", justifyContent:"center"}}>
             {isImagePickerVisible && (
@@ -328,7 +325,7 @@ export default function App() {
                   setReturnedPrompt={setReturnedPrompt}
                   promptList={promptList}
                   setPromptList={setPromptList}
-                  window={window}
+                  window={windowWidth}
                   setPlaySound={setPlaySound}
                   imageSource={imageSource}
                   setImageSource={setImageSource}
@@ -441,8 +438,8 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     position: "absolute",
-    left: window.width / 2 - 15,
-    top: window.height / 2 - 15,
+    left: windowWidth / 2 - 15,
+    top: windowHeight / 2 - 15,
     zIndex: 1,
     elevation: 3,
     backgroundColor: colors.buttonBackground,

@@ -13,7 +13,7 @@ const Expand = ({ setPlaySound, isImagePickerVisible, setImagePickerVisible, win
         styles.expandButton,
         {
           alignSelf: "flex-start",
-          marginLeft: window.width < 1000 ? "20%" : "20%",
+          marginLeft: window < 1000 ? "20%" : "20%",
           marginBottom: 0,
         },
       ]}

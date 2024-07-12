@@ -43,10 +43,13 @@ const Inference = ({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: modelData
+          itemString: modelData
         })
     };
-    fetch('/core', requestOptions)
+    fetch('http://localhost:8000/core', requestOptions)          // Change this to your API endpoint and use a library                 
+                                           // Axios if not running in the same container
+                                          // http://localhost:8085/core if running locally or w/e port your server is using or
+                                          // /api if running in a container
 }, []);
     
 
