@@ -21,8 +21,7 @@ const Buttons = ({
   longPrompt,
   setTextInference,
   switchPromptFunction,
-  promptLengthValue,
-  setParametersWrapper,
+  promptLengthValue
 }) => {
   
   const [comboButtonPressed, setComboButtonPressed] = useState(false);
@@ -132,7 +131,6 @@ const Buttons = ({
           <Pressable
             onPress={() => {
               setInferrenceButton(true);
-              setParametersWrapper();
               setPlaySound("click");
             }}
             style={({ pressed }) => [

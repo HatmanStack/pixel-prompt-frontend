@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
@@ -58,7 +58,7 @@ export default function DropDownComponent({
       valueField="value"
       placeholder={placeholderModelID}
       onChange={(item) => {
-        passModelID(item.value);
+        passModelID(item);
         setPlaceholderModelID(item.label);
       }}
     />

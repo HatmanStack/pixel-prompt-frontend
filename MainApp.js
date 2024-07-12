@@ -5,8 +5,8 @@ import {
   ScrollView,
   Text,
   Pressable,
-  Dimensions,
   Image,
+  Dimensions
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
@@ -32,12 +32,12 @@ export default function App() {
   const [inferredImage, setInferredImage] = useState(assetImage);
   const [steps, setSteps] = useState(28);
   const [guidance, setGuidance] = useState(5);
-  const [modelID, setModelID] = useState(
-    "stabilityai/stable-diffusion-3-medium"
-  );
+  const [modelID, setModelID] = useState({
+    label: "Stable Diffusion 3",
+    value: "stabilityai/stable-diffusion-3-medium",
+  });
   const [prompt, setPrompt] = useState("Avocado Armchair");
   const [inferredPrompt, setInferredPrompt] = useState(null);
-  const [parameters, setParameters] = useState(null);
   const [activity, setActivity] = useState(false);
   const [modelError, setModelError] = useState(false);
   const [returnedPrompt, setReturnedPrompt] = useState("Avacado Armchair")
@@ -59,11 +59,7 @@ export default function App() {
   const [swapImage, setSwapImage] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [columnCount, setColumnCount] = useState(3);
- 
 
-  const windowWidth = Dimensions.get('window').width;
-  const windowHeight = Dimensions.get('window').height;
-  
   const passModelIDWrapper = (x) => {
     setModelError(false);
     setModelID(x);
@@ -77,6 +73,7 @@ export default function App() {
   useEffect(() => {
     if(swapImage){
     if(inferredImage !== addImage){
+    console.log("swapImage", inferredImage);
     setPromptList(prevPromptList => [initialReturnedPrompt,...prevPromptList]);
     setImageSource(prevImageSource => [inferredImage, ...prevImageSource ]);  
     setInferredImage(addImage);
@@ -86,8 +83,6 @@ export default function App() {
     setSwapImage(false);
   }
   }),[swapImage];
-
-
 
   const switchPromptFunction = () => {
     setPromptLengthValue(!promptLengthValue);
@@ -104,10 +99,6 @@ export default function App() {
     setInferredPrompt(flanPrompt);
   };
 
-  const setParametersWrapper = () => {
-    setParameters(`${prompt}-${steps}-${guidance}-${modelID}`);
-  };
-
   const updateColumnCount = (width) => {
     if (width < 600) setColumnCount(3);
     else if (width >= 600 && width < 1000) setColumnCount(4);
@@ -118,7 +109,7 @@ export default function App() {
 
   useEffect(() => {
     const handleResize = () => {
-      updateColumnCount(windowWidth);
+      updateColumnCount(Dimensions.get('window').width);
     };
     handleResize();
     Dimensions.addEventListener('change', handleResize);
@@ -142,12 +133,13 @@ export default function App() {
         setModelError={setModelError}
       />
       <Inference
+        setImageSource={setImageSource}
+        setPromptList={setPromptList}
         selectedImageIndex={selectedImageIndex}
         setInferrenceButton={setInferrenceButton}
         inferrenceButton={inferrenceButton}
         setModelMessage={setModelMessage}
         imageSource={imageSource}
-        parameters={parameters}
         modelID={modelID}
         prompt={prompt}
         styleSwitch={styleSwitch}
@@ -166,7 +158,7 @@ export default function App() {
         style={styles.ScrollView}
         showsVerticalScrollIndicator={false}
       >
-        {windowWidth > 1000 ? (
+        {Dimensions.get('window').width > 1000 ? (
           <View style={styles.rowContainer}>
             {/* Left column */}
             {isImagePickerVisible && (
@@ -178,8 +170,8 @@ export default function App() {
               style={({ pressed }) => [
                 styles.swapButton,
                 {
-                  top: pressed ? windowHeight / 2 - 13 : windowHeight / 2 - 15,
-                  left: pressed ? windowWidth / 2 - 13 : windowWidth / 2 - 15,
+                  top: pressed ? Dimensions.get('window').height / 2 - 13 : Dimensions.get('window').height / 2 - 15,
+                  left: pressed ? Dimensions.get('window').width / 2 - 13 : Dimensions.get('window').width / 2 - 15,
                   width: pressed ? 52 : 60,
                   height: pressed ? 52 : 60,
                 },
@@ -221,7 +213,6 @@ export default function App() {
                     setTextInference={setTextInference}
                     switchPromptFunction={switchPromptFunction}
                     promptLengthValue={promptLengthValue}
-                    setParametersWrapper={setParametersWrapper}
                   />
                   {modelError ? (
                     <Text style={styles.promptText}>{modelMessage}</Text>
@@ -236,7 +227,6 @@ export default function App() {
                   setPlaySound={setPlaySound}
                   isImagePickerVisible={isImagePickerVisible}
                   setImagePickerVisible={setImagePickerVisible}
-                  window={windowWidth}
                 />
                 {isImagePickerVisible && (
                   <MyImagePicker
@@ -247,7 +237,6 @@ export default function App() {
                     setReturnedPrompt={setReturnedPrompt}
                     promptList={promptList}
                     setPromptList={setPromptList}
-                    window={windowWidth}
                     setPlaySound={setPlaySound}
                     imageSource={imageSource}
                     setImageSource={setImageSource}
@@ -301,7 +290,6 @@ export default function App() {
               setTextInference={setTextInference}
               switchPromptFunction={switchPromptFunction}
               promptLengthValue={promptLengthValue}
-              setParametersWrapper={setParametersWrapper}
             />
             {modelError ? (
               <Text style={styles.promptText}>{modelMessage}</Text>
@@ -312,7 +300,6 @@ export default function App() {
               setPlaySound={setPlaySound}
               isImagePickerVisible={isImagePickerVisible}
               setImagePickerVisible={setImagePickerVisible}
-              window={windowWidth}
             />
             <View style={{flex:1, alignItems:"center", justifyContent:"center"}}>
             {isImagePickerVisible && (
@@ -325,7 +312,6 @@ export default function App() {
                   setReturnedPrompt={setReturnedPrompt}
                   promptList={promptList}
                   setPromptList={setPromptList}
-                  window={windowWidth}
                   setPlaySound={setPlaySound}
                   imageSource={imageSource}
                   setImageSource={setImageSource}
@@ -438,8 +424,6 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     position: "absolute",
-    left: windowWidth / 2 - 15,
-    top: windowHeight / 2 - 15,
     zIndex: 1,
     elevation: 3,
     backgroundColor: colors.buttonBackground,

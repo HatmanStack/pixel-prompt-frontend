@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Pressable, Image } from "react-native";
 import { Dimensions } from "react-native";
 
-const Expand = ({ setPlaySound, isImagePickerVisible, setImagePickerVisible, window }) => {
+const Expand = ({ setPlaySound, isImagePickerVisible, setImagePickerVisible }) => {
 
   const rightImage = require("../assets/right.png");
   const downImage = require("../assets/down.png");
@@ -13,7 +13,7 @@ const Expand = ({ setPlaySound, isImagePickerVisible, setImagePickerVisible, win
         styles.expandButton,
         {
           alignSelf: "flex-start",
-          marginLeft: window < 1000 ? "20%" : "20%",
+          marginLeft: Dimensions.get('window').width < 1000 ? "20%" : "20%",
           marginBottom: 0,
         },
       ]}

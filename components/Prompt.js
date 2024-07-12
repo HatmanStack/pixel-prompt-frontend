@@ -31,9 +31,9 @@ const PromptInference = ({
       } else {
         alteredPrompt = prompt;
       }
-      fetch("http://localhost:8000/inferencePrompt", {                        // Change this to your API endpoint and use a library
+      fetch("/inferencePrompt", {                        // Change this to your API endpoint and use a library
         method: "POST",                                   // Axios if not running in the same container
-        headers: {                                        // http://localhost:8085/inferencePrompt if running locally or w/e port your server is using or                                                        
+        headers: {                                        // http://localhost:8000/inferencePrompt if running locally or w/e port your server is using or                                                        
           "Content-Type": "application/json",             // inferencePrompt if running in a container
         },
         body: JSON.stringify({
@@ -41,10 +41,8 @@ const PromptInference = ({
         }),
       }).then((response) => {
         response.json().then((responseData) => {
-          console.log(responseData);
           const generatedText = responseData["plain"];
           const longPrompt = generatedText.split("Stable Diffusion Prompt:")[1];
-          console.log(longPrompt);
           setFlanPrompt(responseData["magic"]);
           setLongPrompt(longPrompt);
           setShortPrompt(alteredPrompt);

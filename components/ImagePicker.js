@@ -7,6 +7,7 @@ import {
   Text,
   Switch,
   FlatList,
+  Dimensions,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
@@ -22,7 +23,6 @@ const MyImagePicker = ({
   setReturnedPrompt,
   promptList,
   setPromptList,
-  window,
   setPlaySound,
   imageSource,
   setImageSource,
@@ -33,9 +33,9 @@ const MyImagePicker = ({
 }) => {
   const [textHeight, setTextHeight] = useState(0);
   const [containerHeight, setContainerHeight] = useState(160);
-
+  
   useEffect(() => {
-    if (window < 1000) {
+    if (Dimensions.get('window').width < 1000) {
       if (selectedImageIndex !== null) {
         setContainerHeight(440 + textHeight);
       } else {
@@ -59,6 +59,7 @@ const MyImagePicker = ({
     });
 
     if (!result.cancelled) {
+      setPlaySound("swoosh");
       setImageSource((prevImageSource) => {
         const newImageSource = [...prevImageSource];
         newImageSource[index] = result.assets[0].uri;
@@ -167,7 +168,7 @@ const MyImagePicker = ({
                 {
                   width: isStartOrEndOfRow(index) ? 0 : selectedImageIndex === index ? 330 : index === imageSource.length - 1 ? 160 : 105,
                   height:
-                    window < 1000 && selectedImageIndex == index
+                  Dimensions.get('window').width < 1000 && selectedImageIndex == index
                       ? containerHeight
                       : selectedImageIndex === index
                         ? 440
@@ -233,7 +234,7 @@ const MyImagePicker = ({
                   )}
                 </Pressable>
               )}
-              {window < 1000 &&
+              {Dimensions.get('window').width < 1000 &&
                 selectedImageIndex === index &&
                 index !== imageSource.length - 1 && (
                   <Text
@@ -248,7 +249,8 @@ const MyImagePicker = ({
                   </Text>
                 )}
               {index === imageSource.length - 1 && !selectedImageIndex &&
-               (selectedImageIndex === null || index !== selectedImageIndex + 2) && (
+               (selectedImageIndex === null || index !== selectedImageIndex + 2) && 
+               (selectedImageIndex === null || imageSource.length !== 2) && (
                 <Pressable
                   style={[styles.selectButton]}
                   onPress={() => {
