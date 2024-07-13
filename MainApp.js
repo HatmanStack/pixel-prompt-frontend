@@ -170,7 +170,7 @@ export default function App() {
               style={({ pressed }) => [
                 styles.swapButton,
                 {
-                  top: pressed ? Dimensions.get('window').height / 2 - 13 : Dimensions.get('window').height / 2 - 15,
+                  top: pressed ? Dimensions.get('window').height / 2 + 3 : Dimensions.get('window').height / 2  + 5,
                   left: pressed ? Dimensions.get('window').width / 2 - 13 : Dimensions.get('window').width / 2 - 15,
                   width: pressed ? 52 : 60,
                   height: pressed ? 52 : 60,
