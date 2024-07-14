@@ -21,12 +21,9 @@ export default function DropDownComponent({
         { label: "Voxel", value: "Fictiverse/Voxel_XL_Lora" },
         { label: "Van-Gogh", value: "dallinmackay/Van-Gogh-diffusion" },
         { label: "Anime - (gsdf)", value: "gsdf/Counterfeit-V2.5" },
-        { label: "Absolute Reality", value: "digiplay/AbsoluteReality_v1.8.1" },
-        { label: "Dreamlike", value: "dreamlike-art/dreamlike-photoreal-2.0" },
         { label: "Acorn", value: "digiplay/Acorn_Photo_v1" },
       ];
       
-
   return (
     <Dropdown
       style={styles.dropdown}

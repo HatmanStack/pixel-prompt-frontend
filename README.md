@@ -51,8 +51,6 @@ The app will be running locally at http://localhost:19006. For different environ
 - **Fictiverse/Voxel_XL_Lora**
 - **dallinmackay/Van-Gogh-diffusion**
 - **gsdf/Counterfeit-V2.5**
-- **digiplay/AbsoluteReality_v1.8.1**
-- **dreamlike-art/dreamlike-photoreal-2.0**
 - **digiplay/Acorn_Photo_v1**
 
 ### Prompts

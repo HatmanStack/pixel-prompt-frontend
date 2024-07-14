@@ -71,7 +71,7 @@ const Inference = ({
       setActivity(true);
       let inferreceModel = modelID.value;
       const ipScaleHolder = getScaledIP(styleSwitch, settingSwitch);
-        fetch("/api", {                             // Change this to your API endpoint and use a library                                         
+        fetch("http://localhost:8000/api", {                             // Change this to your API endpoint and use a library                                         
           method: "POST",                           // Axios if not running in the same container
           headers: {                                // http://localhost:8000/api if running locally or w/e port your server is using or
              "Content-Type": "application/json",    // /api if running in a container
