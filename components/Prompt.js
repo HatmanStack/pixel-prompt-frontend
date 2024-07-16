@@ -20,13 +20,6 @@ const PromptInference = ({
       let alteredPrompt = "";
       if (prompt === "Avocado Armchair" || prompt === "") {
         const randomIndex = Math.floor(Math.random() * seeds.seeds.length);
-        if (randomIndex > seeds.seeds.length - 13) {
-          setLongPrompt(seeds.seeds[randomIndex]);
-          setShortPrompt(seeds.seeds[randomIndex]);
-          setInferredPrompt(seeds.seeds[randomIndex]);
-          setActivity(false);
-          return;
-        }
         alteredPrompt = seeds.seeds[randomIndex];
       } else {
         alteredPrompt = prompt;

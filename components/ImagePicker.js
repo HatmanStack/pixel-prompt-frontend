@@ -311,11 +311,10 @@ const styles = StyleSheet.create({
   promptText: {
     color: colors.white,
     fontSize: 18,
-    fontWeight: "bold",
     textAlign: "center",
     letterSpacing: 2,
     lineHeight: 30,
-    fontFamily: "Sigmar",
+    fontFamily: "System",
   },
   sliderText: {
     fontSize: 18,

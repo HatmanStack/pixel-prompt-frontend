@@ -9,8 +9,28 @@ export default function DropDownComponent({
     const [placeholderModelID, setPlaceholderModelID] = useState("Model ID");
       const data = [ 
         {
+          label: "Random",
+          value: "Random",
+        },
+        {
           label: "Stable Diffusion 3",
           value: "stabilityai/stable-diffusion-3-medium",
+        },
+        {
+          label: "OpenDalle",
+          value: "dataautogpt3/OpenDalleV1.1",
+        },
+        {
+          label: "Stable Hamster",
+          value: "SG161222/RealVisXL_V4.0",
+        },
+        {
+          label: "Juggernaut",
+          value: "digiplay/Juggernaut_final",
+        },
+        {
+          label: "Kolors",
+          value: "gokaygokay/Kolors",
         },
         {
           label: "Stable Diffusion XL",
@@ -21,7 +41,6 @@ export default function DropDownComponent({
         { label: "Voxel", value: "Fictiverse/Voxel_XL_Lora" },
         { label: "Van-Gogh", value: "dallinmackay/Van-Gogh-diffusion" },
         { label: "Anime - (gsdf)", value: "gsdf/Counterfeit-V2.5" },
-        { label: "Acorn", value: "digiplay/Acorn_Photo_v1" },
       ];
       
   return (

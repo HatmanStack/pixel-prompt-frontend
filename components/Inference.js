@@ -21,7 +21,6 @@ function getScaledIP(styleSwitch, settingSwitch) {
   return scaledIP;
 }
 
-
 const Inference = ({
   setImageSource,
   setPromptList,
@@ -46,17 +45,38 @@ const Inference = ({
         method: 'GET'
     };
     fetch('/core', requestOptions)
-        .then((response) => response.json()) 
-        .then((responseData) => {
-          console.log(responseData);
-          if (responseData.prompt.length > 0) {
-            responseData.prompt.forEach((prompt, index) => {
-              setPromptList(prevPromptList => [prompt, ...prevPromptList]);
+        .then((response) => {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+            return reader.read().then(function processText({ done, value }) {
+                if (done) {
+                    console.log("Stream complete");
+                    return;
+                }
+
+              function processJsonObject(jsonObject) {
+                  setPromptList(prevPromptList => [jsonObject.prompt, ...prevPromptList]);
+                  setImageSource(prevImageSource => [jsonObject.base64, ...prevImageSource]);                
+              }
+              buffer += decoder.decode(value, {stream: true});
+              buffer = buffer.replace('[', '').replaceAll(',{', '{');
+              try {
+                  while (buffer.indexOf('}') !== -1) {
+                    let processText = '';
+                    const endIndex = buffer.indexOf('}');
+                    if (endIndex !== -1) {
+                        processText = buffer.slice(0, endIndex + 1);
+                        const jsonObject = JSON.parse(processText);
+                        processJsonObject(jsonObject);
+                        buffer = buffer.slice(endIndex + 1);
+                    }
+                }
+              } catch (error) {
+               console.log("Error parsing JSON: " + error);
+              }
+                return reader.read().then(processText);
             });
-            responseData.base64.forEach((image, index) => {
-              setImageSource(prevImageSource => [image, ...prevImageSource]);
-            });
-          }
         })
         .catch((error) => {
             console.error('There was an error!', error);
@@ -71,7 +91,7 @@ const Inference = ({
       setActivity(true);
       let inferreceModel = modelID.value;
       const ipScaleHolder = getScaledIP(styleSwitch, settingSwitch);
-        fetch("http://localhost:8000/api", {                             // Change this to your API endpoint and use a library                                         
+        fetch("/api", {                             // Change this to your API endpoint and use a library                                         
           method: "POST",                           // Axios if not running in the same container
           headers: {                                // http://localhost:8000/api if running locally or w/e port your server is using or
              "Content-Type": "application/json",    // /api if running in a container
@@ -93,12 +113,17 @@ const Inference = ({
               setActivity(false);
               setModelError(true);
               setInferrenceButton(false);
+            }else if(responseData.output.includes("GPU")){
+              setModelMessage(responseData.output.split(": ")[2]);
+              setActivity(false);
+              setModelError(true);
+              setInferrenceButton(false);
             }else {
-              setInitialReturnedPrompt(modelID.label + " " + prompt);
+              setInitialReturnedPrompt("Model:\n" + responseData.model + "\n\nPrompt:\n" + prompt);
             }
             setInferrenceButton(false);
             setActivity(false);
-            setReturnedPrompt(prompt);
+            setReturnedPrompt("Model:\n" + responseData.model + "\n\nPrompt:\n" + prompt);
             setInferredImage("data:image/png;base64," + responseData.output);
           })
           .catch(function (error) {

@@ -170,7 +170,7 @@ export default function App() {
               style={({ pressed }) => [
                 styles.swapButton,
                 {
-                  top: pressed ? Dimensions.get('window').height / 2 + 23 : Dimensions.get('window').height / 2  + 25,
+                  top: pressed ? Dimensions.get('window').height / 2 - 123 : Dimensions.get('window').height / 2  - 125,
                   left: pressed ? Dimensions.get('window').width / 2 - 13 : Dimensions.get('window').width / 2 - 15,
                   width: pressed ? 52 : 60,
                   height: pressed ? 52 : 60,
@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     letterSpacing: 2,
     lineHeight: 30,
-    fontFamily: "Sigmar",
+    fontFamily: "System",
   },
   ScrollView: {
     backgroundColor: colors.backgroundColor,
