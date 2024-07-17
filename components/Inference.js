@@ -1,43 +1,39 @@
 import { useEffect } from "react";
 
 function getScaledIP(styleSwitch, settingSwitch) {
-  let scaledIP = { none: { key2: [0.0, 0.0] } };
+  let scaledIP = 'Load original IP-Adapter';
   if (styleSwitch) {
-    scaledIP = {
-      up: { block_0: [0.0, 1.0, 0.0] },
-    };
+    scaledIP = "Load only style blocks";
   }
   if (settingSwitch) {
-    scaledIP = {
-      down: { block_2: [0.0, 1.0] },
-    };
+    scaledIP = "Load only layout blocks";
   }
   if (styleSwitch && settingSwitch) {
-    scaledIP = {
-      down: { block_2: [0.0, 1.0] },
-      up: { block_0: [0.0, 1.0, 0.0] },
-    };
+    scaledIP = "Load style+layout block";
   }
   return scaledIP;
 }
 
 const Inference = ({
-  setImageSource,
-  setPromptList,
-  setInferrenceButton,
-  inferrenceButton,
-  setModelMessage,
-  modelID,
-  prompt,
-  styleSwitch,
-  settingSwitch,
-  guidance,
-  steps,
-  setActivity,
-  setModelError,
-  setReturnedPrompt,
-  setInitialReturnedPrompt,
-  setInferredImage,
+      setImageSource,
+      setPromptList,
+      selectedImageIndex,
+      setInferrenceButton,
+      inferrenceButton,
+      setModelMessage,
+      imageSource,
+      modelID,
+      prompt,
+      styleSwitch,
+      settingSwitch,
+      control,
+      guidance,
+      steps,
+      setActivity,
+      setModelError,
+      setReturnedPrompt,
+      setInitialReturnedPrompt,
+      setInferredImage,
 }) => {
   
   useEffect(() => {
@@ -91,6 +87,7 @@ const Inference = ({
       setActivity(true);
       let inferreceModel = modelID.value;
       const ipScaleHolder = getScaledIP(styleSwitch, settingSwitch);
+      const controlImage = imageSource[selectedImageIndex];
         fetch("/api", {                             // Change this to your API endpoint and use a library                                         
           method: "POST",                           // Axios if not running in the same container
           headers: {                                // http://localhost:8000/api if running locally or w/e port your server is using or
@@ -102,8 +99,9 @@ const Inference = ({
             guidance: guidance,
             modelID: inferreceModel,
             modelLabel: modelID.label,
-            image: "test",                  
-            scale: ipScaleHolder,           
+            image: controlImage,                  
+            target: ipScaleHolder,   
+            control: control        
           }),
         })
           .then((response) => response.json())
@@ -113,8 +111,11 @@ const Inference = ({
               setActivity(false);
               setModelError(true);
               setInferrenceButton(false);
-            }else if(responseData.output.includes("GPU")){
-              setModelMessage(responseData.output.split(": ")[2]);
+            }else if(/You have exceeded your GPU quota/.test(responseData.output)){
+              const gpu = responseData.output.split(": ")[2];
+              //Get the last nine character of gpu
+              const gpuName = gpu.slice(-9);
+              setModelMessage(`GPU Quota Exceeded! Try Random Models. ${gpuName.slice(0,-1)}`);
               setActivity(false);
               setModelError(true);
               setInferrenceButton(false);

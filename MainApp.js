@@ -32,9 +32,10 @@ export default function App() {
   const [inferredImage, setInferredImage] = useState(assetImage);
   const [steps, setSteps] = useState(28);
   const [guidance, setGuidance] = useState(5);
+  const [control, setControl] = useState(1.0);
   const [modelID, setModelID] = useState({
-    label: "Stable Diffusion 3",
-    value: "stabilityai/stable-diffusion-3-medium",
+    label: "Random",
+    value: "Random",
   });
   const [prompt, setPrompt] = useState("Avocado Armchair");
   const [inferredPrompt, setInferredPrompt] = useState(null);
@@ -144,6 +145,7 @@ export default function App() {
         prompt={prompt}
         styleSwitch={styleSwitch}
         settingSwitch={settingSwitch}
+        control={control}
         guidance={guidance}
         steps={steps}
         setActivity={setActivity}
@@ -249,6 +251,7 @@ export default function App() {
                 <SliderComponent
                   setSteps={setSteps}
                   setGuidance={setGuidance}
+                  setControl={setControl}
                 />
               
             </View>
@@ -347,7 +350,7 @@ export default function App() {
               </>
             )}
             </View>
-            <SliderComponent setSteps={setSteps} setGuidance={setGuidance} />
+            <SliderComponent setSteps={setSteps} setGuidance={setGuidance} setControl={setControl}/>
             <View style={styles.imageCard}>
             {inferredImage && (
               <Image

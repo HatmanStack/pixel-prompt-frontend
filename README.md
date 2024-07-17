@@ -49,7 +49,7 @@ The app will be running locally at http://localhost:19006. For different environ
 - **dataautogpt3/OpenDalleV1.1**
 - **SG161222/RealVisXL_V4.0**
 - **digiplay/Juggernaut_final**
-- **gokaygokay/Kolors**
+- **Kwai-Kolors/Kolors**
 - **stabilityai/stable-diffusion-xl-base-1.0**
 - **fluently/Fluently-XL-Final**
 - **nerijs/pixel-art-xl**

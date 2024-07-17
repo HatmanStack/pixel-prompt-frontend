@@ -116,7 +116,7 @@ const MyImagePicker = ({
   }
 
   return (
-    <>
+    <><Text style={[styles.promptText,{ width: 500, margin: 20, fontSize: 14}]}>Click Image to Enlarge. If Image is enlarged it will be used as an input image for the next image generated.</Text>
       <View style={styles.switchesRowContainer}>
         <View style={styles.columnContainer}>
           <Text
@@ -258,7 +258,7 @@ const MyImagePicker = ({
                     selectImage(index);
                   }}
                 >
-                  <Text style={styles.promptText}>Select</Text>
+                  <Text style={[styles.promptText, {fontFamily:"Sigmar"}]}>Select</Text>
                 </Pressable>
               )}
             </View>
