@@ -106,21 +106,23 @@ const Inference = ({
         })
           .then((response) => response.json())
           .then((responseData) => {
-            if (responseData.output == "Model Waking") {
+            if (/Model Waking/.test(responseData.output)) {
               setModelMessage("Model Waking");
-              setActivity(false);
               setModelError(true);
-              setInferrenceButton(false);
             }else if(/You have exceeded your GPU quota/.test(responseData.output)){
               const gpu = responseData.output.split(": ")[2];
-              //Get the last nine character of gpu
               const gpuName = gpu.slice(-9);
               setModelMessage(`GPU Quota Exceeded! Try Random Models. ${gpuName.slice(0,-1)}`);
-              setActivity(false);
               setModelError(true);
-              setInferrenceButton(false);
+            }else if(/NSFW/.test(responseData.output)){
+              setModelMessage(`NSFW...`);
+              setModelError(true);
+            }else if(/An error occurred/.test(responseData.output)){
+              setModelMessage(`Model Error!`);
+              setModelError(true);
             }else {
               setInitialReturnedPrompt("Model:\n" + responseData.model + "\n\nPrompt:\n" + prompt);
+              setModelError(false);
             }
             setInferrenceButton(false);
             setActivity(false);
@@ -128,7 +130,7 @@ const Inference = ({
             setInferredImage("data:image/png;base64," + responseData.output);
           })
           .catch(function (error) {
-            setModelMessage("Model Error!");
+            setModelMessage("Application Error!");
             setActivity(false);
             setModelError(true);
             setInferrenceButton(false);

@@ -17,26 +17,9 @@ export default function DropDownComponent({
           value: "stabilityai/stable-diffusion-3-medium",
         },
         {
-          label: "OpenDalle",
-          value: "dataautogpt3/OpenDalleV1.1",
-        },
-        {
-          label: "Stable Hamster",
-          value: "SG161222/RealVisXL_V4.0",
-        },
-        {
-          label: "Juggernaut",
-          value: "digiplay/Juggernaut_final",
-        },
-        {
-          label: "Kolors",
-          value: "gokaygokay/Kolors",
-        },
-        {
           label: "Stable Diffusion XL",
           value: "stabilityai/stable-diffusion-xl-base-1.0",
         },   
-        { label: "Fluently", value: "fluently/Fluently-XL-Final" },
         { label: "Pixel", value: "nerijs/pixel-art-xl" },
         { label: "Voxel", value: "Fictiverse/Voxel_XL_Lora" },
         { label: "Van-Gogh", value: "dallinmackay/Van-Gogh-diffusion" },
