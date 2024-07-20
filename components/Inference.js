@@ -35,12 +35,12 @@ const Inference = ({
       setInitialReturnedPrompt,
       setInferredImage,
 }) => {
-  
+ 
   useEffect(() => {
     const requestOptions = {
         method: 'GET'
     };
-    fetch('/core', requestOptions)
+    fetch("/core", requestOptions)
         .then((response) => {
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
@@ -114,15 +114,16 @@ const Inference = ({
               const gpuName = gpu.slice(-9);
               setModelMessage(`GPU Quota Exceeded! Try Random Models. ${gpuName.slice(0,-1)}`);
               setModelError(true);
-            }else if(/NSFW/.test(responseData.output)){
-              setModelMessage(`NSFW...`);
-              setModelError(true);
             }else if(/An error occurred/.test(responseData.output)){
               setModelMessage(`Model Error!`);
               setModelError(true);
             }else {
               setInitialReturnedPrompt("Model:\n" + responseData.model + "\n\nPrompt:\n" + prompt);
               setModelError(false);
+            }
+            if(responseData.NSFW){
+              setModelMessage(`NSFW...Image will not be Saved`);
+              setModelError(true);
             }
             setInferrenceButton(false);
             setActivity(false);
