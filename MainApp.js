@@ -34,8 +34,8 @@ export default function App() {
   const [guidance, setGuidance] = useState(5);
   const [control, setControl] = useState(1.0);
   const [modelID, setModelID] = useState({
-    label: "Random",
-    value: "Random",
+    label: "AuraFlow",
+    value: "fal/AuraFlow",
   });
   const [prompt, setPrompt] = useState("Avocado Armchair");
   const [inferredPrompt, setInferredPrompt] = useState(null);

@@ -12,6 +12,7 @@ export default function DropDownComponent({
           label: "Random",
           value: "Random",
         },
+        { label: "AuraFlow", value: "fal/AuraFlow" },
         {
           label: "Stable Diffusion 3",
           value: "stabilityai/stable-diffusion-3-medium",

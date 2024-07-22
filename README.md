@@ -45,6 +45,7 @@ The app will be running locally at http://localhost:19006. For different environ
 ### Diffusion
 
 - **Random**
+- **fal/AuraFlow**
 - **stabilityai/stable-diffusion-3-medium**
 - **stabilityai/stable-diffusion-xl-base-1.0**
 - **nerijs/pixel-art-xl**
