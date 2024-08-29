@@ -116,7 +116,7 @@ const MyImagePicker = ({
   }
 
   return (
-    <><Text style={[styles.promptText,{ width: 500, margin: 20, fontSize: 14}]}>Click Image to Enlarge. If Image is enlarged it will be used as an input image for the next image generated.</Text>
+    <><Text style={[styles.promptText,{ width: 500, margin: 20, fontSize: 14}]}>Click Image to Enlarge. If Image is enlarged it will be used as an input image for the next image generated. Use either or both the Style and Layout attributes to affect how the model interprets the input image.</Text>
       <View style={styles.switchesRowContainer}>
         <View style={styles.columnContainer}>
           <Text
@@ -214,7 +214,8 @@ const MyImagePicker = ({
                   />
                 </Pressable>
               </View>
-              { index !== imageSource.length - 1 && (selectedImageIndex === null || index !== selectedImageIndex + 1) && 
+              { // Code to delete pics in gallery
+              /**index !== imageSource.length - 1 && (selectedImageIndex === null || index !== selectedImageIndex + 1) && 
               (selectedImageIndex === null || (index - 2) % columnCount !== 0) && (
                 <Pressable
                   onPress={() => {
@@ -233,7 +234,7 @@ const MyImagePicker = ({
                     />
                   )}
                 </Pressable>
-              )}
+              )*/}
               {Dimensions.get('window').width < 1000 &&
                 selectedImageIndex === index &&
                 index !== imageSource.length - 1 && (

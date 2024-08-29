@@ -13,7 +13,7 @@ export default function PromptInputComponent({ setPlaySound, setPrompt, inferred
 
   const textInputStyle = {
     ...styles.input,
-    width: Dimensions.get('window').width > 500 ? 500 : Dimensions.get('window').width - 80,
+    width: Dimensions.get('window').width > 500 ? 500 : "100%",
   };
 
   useEffect(() => {

@@ -34,8 +34,8 @@ export default function App() {
   const [guidance, setGuidance] = useState(5);
   const [control, setControl] = useState(1.0);
   const [modelID, setModelID] = useState({
-    label: "AuraFlow",
-    value: "fal/AuraFlow",
+    label: "Random",
+    value: "Random",
   });
   const [prompt, setPrompt] = useState("Avocado Armchair");
   const [inferredPrompt, setInferredPrompt] = useState(null);
@@ -60,7 +60,8 @@ export default function App() {
   const [swapImage, setSwapImage] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [columnCount, setColumnCount] = useState(3);
-
+  const [isGuidanceVisible, setIsGuidanceVisible] = useState(false);
+  const isWindowBiggerThanContainer = Dimensions.get('window').width > 600 ? 500 : "100%"
   const passModelIDWrapper = (x) => {
     setModelError(false);
     setModelID(x);
@@ -199,6 +200,7 @@ export default function App() {
                   inferredPrompt={inferredPrompt}
                 />
               </View>
+              
               <View style={[styles.rowContainer, { padding: 0 }]}>
                 <DropDownComponent
                   setPlaySound={setPlaySound}
@@ -224,11 +226,26 @@ export default function App() {
                 </View>
               </View>
 
-              
+              <Expand
+              setPlaySound={setPlaySound}
+              isImagePickerVisible={isImagePickerVisible}
+              setImagePickerVisible={setImagePickerVisible}
+              isGuidanceVisible={isGuidanceVisible}
+              setIsGuidanceVisible={setIsGuidanceVisible}
+              isGuidance={true}
+            />
+            {isGuidanceVisible && <Text style={[styles.promptText,{ width: isWindowBiggerThanContainer, margin: 20, fontSize: 14}]}>
+              Select a model from the drop down menu or by default receive a Random model. 
+              The prompt button returns three different prompts; a seed prompt, descriptive prompt and magic prompt.
+              If the user creates a prompt and then uses the prompt button, user input will be treated as the seed prompt.
+              To generate fresh prompts clear the input window. The sliders dictate the strength of each attribute.</Text>}
                 <Expand
                   setPlaySound={setPlaySound}
                   isImagePickerVisible={isImagePickerVisible}
                   setImagePickerVisible={setImagePickerVisible}
+                  isGuidanceVisible={isGuidanceVisible}
+                  setIsGuidanceVisible={setIsGuidanceVisible}
+                  isGuidance={false}
                 />
                 {isImagePickerVisible && (
                   <MyImagePicker
@@ -303,8 +320,24 @@ export default function App() {
               setPlaySound={setPlaySound}
               isImagePickerVisible={isImagePickerVisible}
               setImagePickerVisible={setImagePickerVisible}
+              isGuidanceVisible={isGuidanceVisible}
+              setIsGuidanceVisible={setIsGuidanceVisible}
+              isGuidance={true}
             />
-            <View style={{flex:1, alignItems:"center", justifyContent:"center"}}>
+            {isGuidanceVisible && <Text style={[styles.promptText,{ width: isWindowBiggerThanContainer, margin: 20, fontSize: 14}]}>
+              Select a model from the drop down menu or by default receive a Random model. 
+              The prompt button returns three different prompts; a seed prompt, descriptive prompt and magic prompt.
+              If the user creates a prompt and then uses the prompt button, user input will be treated as the seed prompt.
+              To generate fresh prompts clear the input window. The sliders dictate the strength of each attribute.</Text>}
+            <Expand
+              setPlaySound={setPlaySound}
+              isImagePickerVisible={isImagePickerVisible}
+              setImagePickerVisible={setImagePickerVisible}
+              isGuidanceVisible={isGuidanceVisible}
+              setIsGuidanceVisible={setIsGuidanceVisible}
+              isGuidance={false}
+            />
+            
             {isImagePickerVisible && (
               <>
                 <MyImagePicker
@@ -349,7 +382,7 @@ export default function App() {
             </Pressable>
               </>
             )}
-            </View>
+            
             <SliderComponent setSteps={setSteps} setGuidance={setGuidance} setControl={setControl}/>
             <View style={styles.imageCard}>
             {inferredImage && (

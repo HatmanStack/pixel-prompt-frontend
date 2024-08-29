@@ -112,7 +112,7 @@ const Inference = ({
             }else if(/You have exceeded your GPU quota/.test(responseData.output)){
               const gpu = responseData.output.split(": ")[2];
               const gpuName = gpu.slice(-9);
-              setModelMessage(`GPU Quota Exceeded! Try Random Models. ${gpuName.slice(0,-1)}`);
+              setModelMessage(`GPU Quota Exceeded! Try Random Models without enlarged images for ${gpuName.slice(0,-1)}`);
               setModelError(true);
             }else if(/An error occurred/.test(responseData.output)){
               setModelMessage(`Model Error!`);

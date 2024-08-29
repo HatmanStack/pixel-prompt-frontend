@@ -1,7 +1,0 @@
-{
-  "display": "standalone",
-  "lang": "en",
-  "name": "Pixel Prompt Frontend",
-  "short_name": "Pixel Prompt Frontend",
-  "start_url": "/?utm_source=web_app_manifest"
-}
